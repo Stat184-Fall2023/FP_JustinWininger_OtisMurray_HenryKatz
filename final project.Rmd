@@ -47,14 +47,6 @@ nflOffense$Team <- sub(".*\\s", "", nflOffense$Team)
 
 #rearrange column order
 nflOffense <- nflOffense[,c("Team", "Games","Points","Yards")]
-
-# #add a new column with the level of competition the team plays in
-# nflOffense <- nflOffense%>%
-#   mutate(Level= "NFL")
-
-#load in NFL data 
-# nflOffense <- read_excel("~/Downloads/nflTable.xlsx")
-# nflOffense <- subset(nflOffense, select=-c(`Yards/G`:`Pts/G`))
 ```
 
 ```{r create college dataframe}
