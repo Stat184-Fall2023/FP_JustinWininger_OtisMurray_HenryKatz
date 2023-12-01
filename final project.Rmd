@@ -46,7 +46,7 @@ nflOffense <- nflOffense%>%rename(
 nflOffense$Team <- sub(".*\\s", "", nflOffense$Team)
 
 #rearrange column order
-nflOffense <- nflOffense[,c("Team", "Games","Yards","Points")]
+nflOffense <- nflOffense[,c("Team", "Games","Points","Yards")]
 
 # #add a new column with the level of competition the team plays in
 # nflOffense <- nflOffense%>%
@@ -82,9 +82,19 @@ collegeOffense <- collegeOffense%>%rename(
 collegeOffense <- collegeOffense[-c(1, 22:23, 44:45, 66:67, 88:89, 110:111, 132:133),]
 
 collegeOffense$Games <- as.numeric(collegeOffense$Games)
+collegeOffense$PPG <- as.numeric(collegeOffense$PPG)
+collegeOffense$YPG <- as.numeric(collegeOffense$YPG)
 
 #get total stats by multiplying per game stats by games played
-collegeOffense$Points <- with(collegeOffense, PPG * Games)
+collegeOffense$Points <- collegeOffense$Games * collegeOffense$PPG
+collegeOffense$Yards <- collegeOffense$Games * collegeOffense$YPG
+
+#round all values to nearest whole number
+collegeOffense <- collegeOffense %>% 
+ mutate_if(is.numeric, round)
+
+#remove unnecessary data
+collegeOffense <- subset(collegeOffense, select=-c(3,4))
 ```
 #rename the teams
 collegeOffense$Team <- gsub("([a-z])([A-Z])", "\\1 \\2", collegeOffense$Team)
@@ -133,3 +143,5 @@ offense <- rbind(nflOffense, collegeOffense)
 
 
 two data sets, one nfl teams, one college teams, does total yards affect total points scored? Is there a relationship
+
+testing testing
