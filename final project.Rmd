@@ -7,6 +7,129 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(Stat2Data)
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(Lock5Data)
+library(tinytex)
+library(car)
+library(leaps)
+library(HH)
+library(rvest)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(tidyr)
+library(readxl)
 ```
-Test
-testing 1234
+
+
+```{r create nfl dataframe}
+#create nfl table
+nflTable <- read_html(
+  x = "http://pfref.com/pi/share/d7riA"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+nflOffense <- nflTable[[1]]
+
+#delete unnecessary data
+nflOffense <- subset(nflOffense, select=-c(1, 6:28))
+nflOffense <- nflOffense[-c(1, 34:36), ]
+
+#rename columns 
+nflOffense <- nflOffense%>%rename(
+  `Team`=1, `Games`=2, `Points`=3, `Yards`=4)
+
+#squish team names
+nflOffense$Team <- sub(".*\\s", "", nflOffense$Team)
+
+#rearrange column order
+nflOffense <- nflOffense[,c("Team", "Games","Yards","Points")]
+
+# #add a new column with the level of competition the team plays in
+# nflOffense <- nflOffense%>%
+#   mutate(Level= "NFL")
+
+#load in NFL data 
+# nflOffense <- read_excel("~/Downloads/nflTable.xlsx")
+# nflOffense <- subset(nflOffense, select=-c(`Yards/G`:`Pts/G`))
+```
+
+```{r}
+# car_data_raw          <- read_csv("/Users/justinwininger/Downloads/HAdata.csv")
+# car_data_raw$location <- "CA"
+# car_data <- car_data_raw %>% 
+#         filter(mileage > 0) %>%                   
+#         filter(price >0)                           # filter out observations that are listed for $0 or have 0 mileage.
+# car_data$age <- 2023 - car_data$year    
+```
+
+```{r create college dataframe}
+collegeTable <- read_html(
+  x = "https://www.sports-reference.com/cfb/years/2022-team-offense.html"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+collegeOffense <- collegeTable[[1]]
+
+collegeOffense <- subset(collegeOffense, select=-c(1, 5:14, 16:25))
+
+collegeOffense <- collegeOffense%>%rename(
+   `Team`=1, `Games`=2, `PPG`=3, `YPG`=4
+ )
+collegeOffense <- collegeOffense[-c(1, 22:23, 44:45, 66:67, 88:89, 110:111, 132:133),]
+
+collegeOffense$Games <- as.numeric(collegeOffense$Games)
+
+#get total stats by multiplying per game stats by games played
+collegeOffense$Points <- with(collegeOffense, PPG * Games)
+```
+#rename the teams
+collegeOffense$Team <- gsub("([a-z])([A-Z])", "\\1 \\2", collegeOffense$Team)
+collegeOffense <- collegeOffense %>% 
+    mutate(Team = sub("\\s+[^ ]+$", "", Team))
+
+#delete the second copy of exact copies
+delete_second_copy <- function(text) {
+  if (grepl("^([a-zA-Z]+)\\1$", text)) {
+    return(sub("^(.+?)\\1$", "\\1", text))
+  } else {
+    return(text)
+  }
+}
+
+# apply the function to the desired column in the data frame
+collegeOffense$Team <- sapply(collegeOffense$Team, delete_second_copy)
+
+#remove unnecessary data
+collegeOffense <- subset(collegeOffense, select=-c(`Yards/G`:`Pts/G`))
+
+#round every value to the nearest whole number
+collegeOffense <- collegeOffense %>% 
+ mutate_if(is.numeric, round)
+
+# #add a new column with the level of competition the team plays in
+# collegeOffense <- collegeOffense%>%
+#   mutate(Level= "College")
+
+#add a new column with the level of competition the team plays in
+collegeOffense <- collegeOffense%>%
+  mutate(Games= 12)
+
+#rearrange column order
+collegeOffense <- collegeOffense[,c("Team", "Games","Yards","Points")]
+```
+
+```{r combine data frames}
+offense <- rbind(nflOffense, collegeOffense)
+```
+
+```{r backups}
+#football season isn't over 
+
+```
+
+
+two data sets, one nfl teams, one college teams, does total yards affect total points scored? Is there a relationship
