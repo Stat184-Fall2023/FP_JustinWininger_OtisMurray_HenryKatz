@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+#load necessary packages
 knitr::opts_chunk$set(echo = TRUE)
 library(Stat2Data)
 library(tidyverse)
@@ -78,6 +79,20 @@ nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`
 
 #rearrange columns
 nflOffense <- nflOffense[, c(1, 2, 4, 5, 3)]
+
+#create new dataframe with just points per game
+nflOffensePPG <- subset(nflOffense, select=-c(3:5))
+#order the rows by PPG 
+nflOffensePPG <- nflOffensePPG[order(nflOffensePPG$`Points Per Game`, decreasing = TRUE),]
+
+#create new dataframe with just yards per game
+nflOffenseYPG <- subset(nflOffense, select=-c(2:4))
+#order the rows by YPG
+nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
+
+#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
+head(nflOffensePPG)
+head(nflOffenseYPG)
 ```
 
 ```{r}
@@ -95,10 +110,21 @@ gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense, linewidth=
 nflTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
 nflPassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense)
 nflRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense)
-mplot(nflModel, which=1)
-mplot(nflModel, which=2)
-cooksplot(nflModel)
-summary(nflModel)
+
+mplot(nflTotalYardsModel, which=1)
+mplot(nflTotalYardsModel, which=2)
+cooksplot(nflTotalYardsModel)
+summary(nflTotalYardsModel)
+
+mplot(nflPassingYardsModel, which=1)
+mplot(nflPassingYardsModel, which=2)
+cooksplot(nflPassingYardsModel)
+summary(nflPassingYardsModel)
+
+mplot(nflRushingYardsModel, which=1)
+mplot(nflRushingYardsModel, which=2)
+cooksplot(nflRushingYardsModel)
+summary(nflRushingYardsModel)
 ```
 
 
