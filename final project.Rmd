@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+#load necessary packages
 knitr::opts_chunk$set(echo = TRUE)
 library(Stat2Data)
 library(tidyverse)
@@ -39,7 +40,9 @@ nflTable <- read_html(
   html_elements(css = "table") %>%
   html_table()
 nflOffense <- nflTable[[1]]
+```
 
+```{r wrangle nfl dataframe}
 #delete unnecessary data
 nflOffense <- subset(nflOffense, select=-c(1, 6:12, 14:18, 20:28))
 nflOffense <- nflOffense[-c(1, 22:23, 36:38), ]
@@ -70,11 +73,30 @@ nflOffense$`Rushing Yards Per Game` <- nflOffense$`Total Rushing Yards` / nflOff
 #remove unnecessary data
 nflOffense <- subset(nflOffense, select=-c(2:6))
 
-#round down to hundredths place
-nflOffense$`Points Per Game` <- round(nflOffense$`Points Per Game`, digits = 2)
-nflOffense$`Yards Per Game` <- round(nflOffense$`Yards Per Game`, digits = 2)
-nflOffense$`Passing Yards Per Game` <- round(nflOffense$`Passing Yards Per Game`, digits = 2)
-nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`, digits = 2)
+#round down to tenths place
+nflOffense$`Points Per Game` <- round(nflOffense$`Points Per Game`, digits = 1)
+nflOffense$`Yards Per Game` <- round(nflOffense$`Yards Per Game`, digits = 1)
+nflOffense$`Passing Yards Per Game` <- round(nflOffense$`Passing Yards Per Game`, digits = 1)
+nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`, digits = 1)
+
+#rearrange columns
+nflOffense <- nflOffense[, c(1, 2, 4, 5, 3)]
+```
+
+```{r create and wrangle new dataframes}
+#create new dataframe with just points per game
+nflOffensePPG <- subset(nflOffense, select=-c(3:5))
+#order the rows by PPG 
+nflOffensePPG <- nflOffensePPG[order(nflOffensePPG$`Points Per Game`, decreasing = TRUE),]
+
+#create new dataframe with just yards per game
+nflOffenseYPG <- subset(nflOffense, select=-c(2:4))
+#order the rows by YPG
+nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
+
+#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
+head(nflOffensePPG)
+head(nflOffenseYPG)
 ```
 
 ```{r}
@@ -84,14 +106,29 @@ nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`
 
 ```{r nfl visualizations}
 gf_point(`Points Per Game`~`Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
 ```
 
 ```{r regression anaylsis}
-nflModel <- lm(Points~Yards, data=nflOffense)
-mplot(nflModel, which=1)
-mplot(nflModel, which=2)
-cooksplot(nflModel)
-summary(nflModel)
+nflTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
+nflPassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense)
+nflRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense)
+
+mplot(nflTotalYardsModel, which=1)
+mplot(nflTotalYardsModel, which=2)
+cooksplot(nflTotalYardsModel)
+summary(nflTotalYardsModel)
+
+mplot(nflPassingYardsModel, which=1)
+mplot(nflPassingYardsModel, which=2)
+cooksplot(nflPassingYardsModel)
+summary(nflPassingYardsModel)
+
+mplot(nflRushingYardsModel, which=1)
+mplot(nflRushingYardsModel, which=2)
+cooksplot(nflRushingYardsModel)
+summary(nflRushingYardsModel)
 ```
 
 
@@ -119,17 +156,30 @@ collegeOffense$`Yards Per Game` <- as.numeric(collegeOffense$`Yards Per Game`)
 # College Data
 
 ```{r college visualization}
-gf_point(Points~Yards, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
 ```
 
 ```{r regression analysis}
-collegeModel <- lm(Points~Yards, data=collegeOffense)
-mplot(collegeModel, which=1)
-mplot(collegeModel, which=2)
-cooksplot(collegeModel)
-summary(collegeModel)
+collegeTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
+collegePassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense)
+collegeRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense)
+
+mplot(collegeTotalYardsModel, which=1)
+mplot(collegeTotalYardsModel, which=2)
+cooksplot(collegeTotalYardsModel)
+summary(collegeTotalYardsModel)
+
+mplot(collegePassingYardsModel, which=1)
+mplot(collegePassingYardsModel, which=2)
+cooksplot(collegePassingYardsModel)
+summary(collegePassingYardsModel)
+
+mplot(collegeRushingYardsModel, which=1)
+mplot(collegeRushingYardsModel, which=2)
+cooksplot(collegeRushingYardsModel)
+summary(collegeRushingYardsModel)
 ```
-
-
 
 two data sets, one nfl teams, one college teams, does total yards affect total points scored? Is there a relationship
