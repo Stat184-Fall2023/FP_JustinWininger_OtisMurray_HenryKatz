@@ -40,7 +40,9 @@ nflTable <- read_html(
   html_elements(css = "table") %>%
   html_table()
 nflOffense <- nflTable[[1]]
+```
 
+```{r wrangle nfl dataframe}
 #delete unnecessary data
 nflOffense <- subset(nflOffense, select=-c(1, 6:12, 14:18, 20:28))
 nflOffense <- nflOffense[-c(1, 22:23, 36:38), ]
@@ -79,7 +81,9 @@ nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`
 
 #rearrange columns
 nflOffense <- nflOffense[, c(1, 2, 4, 5, 3)]
+```
 
+```{r create and wrangle new dataframes}
 #create new dataframe with just points per game
 nflOffensePPG <- subset(nflOffense, select=-c(3:5))
 #order the rows by PPG 
