@@ -156,17 +156,30 @@ collegeOffense$`Yards Per Game` <- as.numeric(collegeOffense$`Yards Per Game`)
 # College Data
 
 ```{r college visualization}
-gf_point(Points~Yards, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
 ```
 
 ```{r regression analysis}
-collegeModel <- lm(Points~Yards, data=collegeOffense)
-mplot(collegeModel, which=1)
-mplot(collegeModel, which=2)
-cooksplot(collegeModel)
-summary(collegeModel)
+collegeTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
+collegePassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense)
+collegeRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense)
+
+mplot(collegeTotalYardsModel, which=1)
+mplot(collegeTotalYardsModel, which=2)
+cooksplot(collegeTotalYardsModel)
+summary(collegeTotalYardsModel)
+
+mplot(collegePassingYardsModel, which=1)
+mplot(collegePassingYardsModel, which=2)
+cooksplot(collegePassingYardsModel)
+summary(collegePassingYardsModel)
+
+mplot(collegeRushingYardsModel, which=1)
+mplot(collegeRushingYardsModel, which=2)
+cooksplot(collegeRushingYardsModel)
+summary(collegeRushingYardsModel)
 ```
-
-
 
 two data sets, one nfl teams, one college teams, does total yards affect total points scored? Is there a relationship
