@@ -83,7 +83,7 @@ nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`
 nflOffense <- nflOffense[, c(1, 2, 4, 5, 3)]
 ```
 
-```{r create and wrangle new dataframes}
+```{r create and wrangle new nfl dataframes}
 #create new dataframe with just points per game
 nflOffensePPG <- subset(nflOffense, select=-c(3:5))
 #order the rows by PPG 
@@ -153,6 +153,21 @@ collegeOffense$`Rushing Yards Per Game` <- as.numeric(collegeOffense$`Rushing Ya
 collegeOffense$`Yards Per Game` <- as.numeric(collegeOffense$`Yards Per Game`)
 ```
 
+```{r create and wrangle new nfl dataframes}
+#create new dataframe with just points per game
+collegeOffensePPG <- subset(collegeOffense, select=-c(3:5))
+#order the rows by PPG 
+collegeOffensePPG <- collegeOffensePPG[order(collegeOffensePPG$`Points Per Game`, decreasing = TRUE),]
+
+#create new dataframe with just yards per game
+collegeOffenseYPG <- subset(collegeOffense, select=-c(2:4))
+#order the rows by YPG
+collegeOffenseYPG <- collegeOffenseYPG[order(collegeOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
+
+#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
+head(collegeOffensePPG)
+head(collegeOffenseYPG)
+```
 # College Data
 
 ```{r college visualization}
