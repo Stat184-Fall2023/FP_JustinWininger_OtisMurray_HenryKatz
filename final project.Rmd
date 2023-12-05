@@ -3,6 +3,8 @@ title: "Final Project"
 author: "Justin Wininger, Otis Murray, Henry Katz"
 date: "2023-11-29"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -24,6 +26,7 @@ library(ggplot2)
 library(tidyr)
 library(readxl)
 library(esquisse)
+library(kableExtra)
 ```
 
 # Introduction
@@ -97,6 +100,52 @@ nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing 
 #compare the two dataframes to see if the teams with the most YPG also have the highest PPG
 head(nflOffensePPG)
 head(nflOffenseYPG)
+
+#Create polished tables
+nflOffenseYPG%>%
+  kable(
+    caption="Every NFL team's Yards Per Game in the 2022/2023 NFL Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+nflOffensePPG%>%
+  kable(
+    caption="Every NFL team's Points Per Game in the 2022/2023 NFL Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+nflOffensePPG <- nflOffensePPG%>%
+  mutate(`PPG Rank`= c(1:32))
+nflOffensePPG <- subset(nflOffensePPG, select=-c(2))
+
+nflOffenseYPG <- nflOffenseYPG%>%
+  mutate(`YPG Rank`= c(1:32))
+nflOffenseYPG <- subset(nflOffenseYPG, select=-c(2))
+
+nflRanks <- merge(nflOffenseYPG, nflOffensePPG, by = "Team", all = TRUE)
+nflRanks <- nflRanks[order(nflRanks$`PPG`, decreasing = FALSE),]
+
+nflRanks%>%
+  kable(
+    caption="Every NFL team's rank in PPG and YPG",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16,
+  )
+
 ```
 
 ```{r}
@@ -167,6 +216,29 @@ collegeOffenseYPG <- collegeOffenseYPG[order(collegeOffenseYPG$`Yards Per Game`,
 #compare the two dataframes to see if the teams with the most YPG also have the highest PPG
 head(collegeOffensePPG)
 head(collegeOffenseYPG)
+
+#Create polished tables
+collegeOffenseYPG%>%
+  kable(
+    caption="Every D1 FBS team's Yards Per Game in the 2022/2023 Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+collegeOffensePPG%>%
+  kable(
+    caption="Every D1 FBS team's Points Per Game in the 2022/2023 Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
 ```
 # College Data
 
