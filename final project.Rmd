@@ -239,6 +239,29 @@ collegeOffensePPG%>%
     bootstrap_options=c("striped", "condensed"),
     font_size=16
   )
+
+collegeOffensePPG <- collegeOffensePPG%>%
+  mutate(`PPG Rank`= c(1:131))
+collegeOffensePPG <- subset(collegeOffensePPG, select=-c(2))
+
+collegeOffenseYPG <- collegeOffenseYPG%>%
+  mutate(`YPG Rank`= c(1:131))
+collegeOffenseYPG <- subset(collegeOffenseYPG, select=-c(2))
+
+collegeRanks <- merge(collegeOffenseYPG, collegeOffensePPG, by = "Team", all = TRUE)
+collegeRanks <- collegeRanks[order(collegeRanks$`PPG`, decreasing = FALSE),]
+
+collegeRanks%>%
+  kable(
+    caption="Every college team's rank in PPG and YPG",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16,
+  )
+
 ```
 # College Data
 
