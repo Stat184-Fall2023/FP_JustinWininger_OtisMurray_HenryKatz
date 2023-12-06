@@ -3,9 +3,379 @@ title: "Final Project"
 author: "Justin Wininger, Otis Murray, Henry Katz"
 date: "2023-11-29"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#load necessary packages
+knitr::opts_chunk$set(echo = TRUE, dpi=300)
+library(Stat2Data)
+library(tidyverse)
+library(mosaic)
+library(ggformula)
+library(Lock5Data)
+library(tinytex)
+library(car)
+library(leaps)
+library(HH)
+library(rvest)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(tidyr)
+library(readxl)
+library(esquisse)
+library(kableExtra)
+library(mosaic)
+library(ggformula)
+library(tidyverse)
+library(car)
+library(tinytex)
+library(Stat2Data)
 ```
-Test
+
+# Introduction
+
+
+
+# NFl Data
+
+```{r create nfl dataframe}
+#create nfl table
+nflTable <- read_html(
+  x = "http://pfref.com/pi/share/d7riA"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+nflOffense <- nflTable[[1]]
+```
+
+```{r wrangle nfl dataframe}
+#delete unnecessary data
+nflOffense <- subset(nflOffense, select=-c(1, 6:12, 14:18, 20:28))
+nflOffense <- nflOffense[-c(1, 22:23, 36:38), ]
+
+#rename columns 
+nflOffense <- nflOffense%>%rename(
+  `Team`=1, `Games`=2, `Total Points`=3, `Total Yards`=4, `Total Passing Yards`=5, `Total Rushing Yards`=6)
+
+#squish team names
+nflOffense$Team <- sub(".*\\s", "", nflOffense$Team)
+
+#rearrange column order
+#nflOffense <- nflOffense[,c("Team", "Games","Points","Yards")]
+
+#make every cell a number versus a character
+nflOffense$Games <- as.numeric(nflOffense$Games)
+nflOffense$`Total Points` <- as.numeric(nflOffense$`Total Points`)
+nflOffense$`Total Yards` <- as.numeric(nflOffense$`Total Yards`)
+nflOffense$`Total Passing Yards` <- as.numeric(nflOffense$`Total Passing Yards`)
+nflOffense$`Total Rushing Yards` <- as.numeric(nflOffense$`Total Rushing Yards`)
+
+#make per game stats
+nflOffense$`Points Per Game` <- nflOffense$`Total Points` / nflOffense$Games
+nflOffense$`Yards Per Game` <- nflOffense$`Total Yards` / nflOffense$Games
+nflOffense$`Passing Yards Per Game` <- nflOffense$`Total Passing Yards` / nflOffense$Games
+nflOffense$`Rushing Yards Per Game` <- nflOffense$`Total Rushing Yards` / nflOffense$Games
+
+#remove unnecessary data
+nflOffense <- subset(nflOffense, select=-c(2:6))
+
+#round down to tenths place
+nflOffense$`Points Per Game` <- round(nflOffense$`Points Per Game`, digits = 1)
+nflOffense$`Yards Per Game` <- round(nflOffense$`Yards Per Game`, digits = 1)
+nflOffense$`Passing Yards Per Game` <- round(nflOffense$`Passing Yards Per Game`, digits = 1)
+nflOffense$`Rushing Yards Per Game` <- round(nflOffense$`Rushing Yards Per Game`, digits = 1)
+
+#rearrange columns
+nflOffense <- nflOffense[, c(1, 2, 4, 5, 3)]
+```
+
+```{r create and wrangle new nfl dataframes}
+#create new dataframe with just points per game
+nflOffensePPG <- subset(nflOffense, select=-c(3:5))
+#order the rows by PPG 
+nflOffensePPG <- nflOffensePPG[order(nflOffensePPG$`Points Per Game`, decreasing = TRUE),]
+
+#create new dataframe with just yards per game
+nflOffenseYPG <- subset(nflOffense, select=-c(2:4))
+#order the rows by YPG
+nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
+
+#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
+head(nflOffensePPG)
+head(nflOffenseYPG)
+
+#Create polished tables
+nflOffenseYPG%>%
+  kable(
+    caption="Every NFL team's Yards Per Game in the 2022/2023 NFL Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+nflOffensePPG%>%
+  kable(
+    caption="Every NFL team's Points Per Game in the 2022/2023 NFL Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+nflOffensePPG <- nflOffensePPG%>%
+  mutate(`PPG Rank`= c(1:32))
+nflOffensePPG <- subset(nflOffensePPG, select=-c(2))
+
+nflOffenseYPG <- nflOffenseYPG%>%
+  mutate(`YPG Rank`= c(1:32))
+nflOffenseYPG <- subset(nflOffenseYPG, select=-c(2))
+
+nflRanks <- merge(nflOffenseYPG, nflOffensePPG, by = "Team", all = TRUE)
+nflRanks <- nflRanks[order(nflRanks$`PPG`, decreasing = FALSE),]
+
+nflRanks%>%
+  kable(
+    caption="Every NFL team's rank in PPG and YPG",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16,
+  )
+
+```
+
+```{r}
+#esquisse::esquisser(data=offense, viewer = 'browser')
+```
+
+
+```{r nfl visualizations}
+gf_point(`Points Per Game`~`Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+```
+
+```{r regression anaylsis}
+nflTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
+nflPassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense)
+nflRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense)
+
+mplot(nflTotalYardsModel, which=1)
+mplot(nflTotalYardsModel, which=2)
+cooksplot(nflTotalYardsModel)
+summary(nflTotalYardsModel)
+
+mplot(nflPassingYardsModel, which=1)
+mplot(nflPassingYardsModel, which=2)
+cooksplot(nflPassingYardsModel)
+summary(nflPassingYardsModel)
+
+mplot(nflRushingYardsModel, which=1)
+mplot(nflRushingYardsModel, which=2)
+cooksplot(nflRushingYardsModel)
+summary(nflRushingYardsModel)
+```
+
+
+```{r create college dataframe}
+collegeTable <- read_html(
+  x = "https://www.sports-reference.com/cfb/years/2022-team-offense.html"
+) %>%
+  html_elements(css = "table") %>%
+  html_table()
+collegeOffense <- collegeTable[[1]]
+
+collegeOffense <- subset(collegeOffense, select=-c(1, 3, 5:7, 9:10, 12:14, 16:25))
+
+collegeOffense <- collegeOffense%>%rename(
+   `Team`=1, `Points Per Game`=2, `Passing Yards Per Game`=3, `Rushing Yards Per Game`=4, `Yards Per Game`=5
+ )
+collegeOffense <- collegeOffense[-c(1, 22:23, 44:45, 66:67, 88:89, 110:111, 132:133),]
+
+collegeOffense$`Points Per Game` <- as.numeric(collegeOffense$`Points Per Game`)
+collegeOffense$`Passing Yards Per Game` <- as.numeric(collegeOffense$`Passing Yards Per Game`)
+collegeOffense$`Rushing Yards Per Game` <- as.numeric(collegeOffense$`Rushing Yards Per Game`)
+collegeOffense$`Yards Per Game` <- as.numeric(collegeOffense$`Yards Per Game`)
+```
+
+```{r create and wrangle new college dataframes}
+#create new dataframe with just points per game
+collegeOffensePPG <- subset(collegeOffense, select=-c(3:5))
+#order the rows by PPG 
+collegeOffensePPG <- collegeOffensePPG[order(collegeOffensePPG$`Points Per Game`, decreasing = TRUE),]
+
+#create new dataframe with just yards per game
+collegeOffenseYPG <- subset(collegeOffense, select=-c(2:4))
+#order the rows by YPG
+collegeOffenseYPG <- collegeOffenseYPG[order(collegeOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
+
+#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
+head(collegeOffensePPG)
+head(collegeOffenseYPG)
+
+#Create polished tables
+collegeOffenseYPG%>%
+  kable(
+    caption="Every D1 FBS team's Yards Per Game in the 2022/2023 Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+collegeOffensePPG%>%
+  kable(
+    caption="Every D1 FBS team's Points Per Game in the 2022/2023 Season",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16
+  )
+
+collegeOffensePPG <- collegeOffensePPG%>%
+  mutate(`PPG Rank`= c(1:131))
+collegeOffensePPG <- subset(collegeOffensePPG, select=-c(2))
+
+collegeOffenseYPG <- collegeOffenseYPG%>%
+  mutate(`YPG Rank`= c(1:131))
+collegeOffenseYPG <- subset(collegeOffenseYPG, select=-c(2))
+
+collegeRanks <- merge(collegeOffenseYPG, collegeOffensePPG, by = "Team", all = TRUE)
+collegeRanks <- collegeRanks[order(collegeRanks$`PPG`, decreasing = FALSE),]
+
+collegeRanks%>%
+  kable(
+    caption="Every college team's rank in PPG and YPG",
+    booktabs=TRUE,
+    align=c("l", rep("c",6))
+  )%>%
+  kableExtra::kable_styling(
+    bootstrap_options=c("striped", "condensed"),
+    font_size=16,
+  )
+
+```
+# College Data
+
+```{r college visualization}
+gf_point(`Points Per Game`~`Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+```
+
+```{r regression analysis}
+collegeTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
+collegePassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense)
+collegeRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense)
+
+mplot(collegeTotalYardsModel, which=1)
+mplot(collegeTotalYardsModel, which=2)
+cooksplot(collegeTotalYardsModel)
+summary(collegeTotalYardsModel)
+
+mplot(collegePassingYardsModel, which=1)
+mplot(collegePassingYardsModel, which=2)
+cooksplot(collegePassingYardsModel)
+summary(collegePassingYardsModel)
+
+mplot(collegeRushingYardsModel, which=1)
+mplot(collegeRushingYardsModel, which=2)
+cooksplot(collegeRushingYardsModel)
+summary(collegeRushingYardsModel)
+```
+
+```{r comparative visualizations}
+collegeOffense <- collegeOffense%>%
+  mutate(`Level`= "College")
+nflOffense <- nflOffense%>%
+  mutate(`Level`= "NFL")
+offense <- rbind(nflOffense,collegeOffense)
+offense$IndLevel <- as.numeric(offense$Level=="NFL")
+
+ggplot(offense) +
+  aes(
+    x = `Yards Per Game`,
+    y = `Points Per Game`,
+    color = Level
+  ) +
+  labs(
+     title= "Points Per Game versus Yards Per Game by Level of Competition"
+  )+
+  geom_point(shape = "circle", size = 1.5) +
+  scale_color_hue(direction = 1) +
+  theme_minimal()
+
+ggplot(offense) +
+  aes(
+    x = `Passing Yards Per Game`,
+    y = `Points Per Game`,
+    color = Level
+  ) +
+  labs(
+     title= "Points Per Game versus Passing Yards Per Game by Level of Competition"
+  )+
+  geom_point(shape = "circle", size = 1.5) +
+  scale_color_hue(direction = 1) +
+  theme_minimal()
+
+ggplot(offense) +
+  aes(
+    x = `Rushing Yards Per Game`,
+    y = `Points Per Game`,
+    color = Level
+  ) +
+  labs(
+     title= "Points Per Game versus Rushing Yards Per Game by Level of Competition"
+  )+
+  geom_point(shape = "circle", size = 1.5) +
+  scale_color_hue(direction = 1) +
+  theme_minimal()
+
+
+offenseModel <- lm(`Points Per Game` ~ `Yards Per Game`+IndLevel+`Yards Per Game`*IndLevel, data = offense)
+summary(offenseModel)
+b0 <- summary(offenseModel)$coeff[1,1]
+b1 <- summary(offenseModel)$coeff[2,1]
+b2 <- summary(offenseModel)$coeff[3,1]
+b3 <- summary(offenseModel)$coeff[4,1]
+gf_point(`Points Per Game` ~ `Yards Per Game`, color=~Level, data = offense) %>%
+gf_abline(intercept = b0, slope = b1, color = "red") %>%
+gf_abline(intercept = b0+b2, slope = b1+b3, color = "blue")
+
+passingOffenseModel <- lm(`Points Per Game` ~ `Passing Yards Per Game`+IndLevel+`Passing Yards Per Game`*IndLevel, data = offense)
+summary(passingOffenseModel)
+pb0 <- summary(passingOffenseModel)$coeff[1,1]
+pb1 <- summary(passingOffenseModel)$coeff[2,1]
+pb2 <- summary(passingOffenseModel)$coeff[3,1]
+pb3 <- summary(passingOffenseModel)$coeff[4,1]
+gf_point(`Points Per Game` ~ `Passing Yards Per Game`, color=~Level, data = offense) %>%
+gf_abline(intercept = pb0, slope = pb1, color = "red") %>%
+gf_abline(intercept = pb0+pb2, slope = pb1+pb3, color = "blue")
+
+rushingOffenseModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game`+IndLevel+`Rushing Yards Per Game`*IndLevel, data = offense)
+summary(rushingOffenseModel)
+rb0 <- summary(rushingOffenseModel)$coeff[1,1]
+rb1 <- summary(rushingOffenseModel)$coeff[2,1]
+rb2 <- summary(rushingOffenseModel)$coeff[3,1]
+rb3 <- summary(rushingOffenseModel)$coeff[4,1]
+gf_point(`Points Per Game` ~ `Rushing Yards Per Game`, color=~Level, data = offense) %>%
+gf_abline(intercept = rb0, slope = rb1, color = "red") %>%
+gf_abline(intercept = rb0+rb2, slope = rb1+rb3, color = "blue")
+
+gf_point(`Points Per Game` ~ `Yards Per Game`, data = offense)%>%gf_lm
+```
+
