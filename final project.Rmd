@@ -9,7 +9,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 #load necessary packages
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, dpi=300)
 library(Stat2Data)
 library(tidyverse)
 library(mosaic)
@@ -375,5 +375,7 @@ rb3 <- summary(rushingOffenseModel)$coeff[4,1]
 gf_point(`Points Per Game` ~ `Rushing Yards Per Game`, color=~Level, data = offense) %>%
 gf_abline(intercept = rb0, slope = rb1, color = "red") %>%
 gf_abline(intercept = rb0+rb2, slope = rb1+rb3, color = "blue")
+
+gf_point(`Points Per Game` ~ `Yards Per Game`, data = offense)%>%gf_lm
 ```
 
