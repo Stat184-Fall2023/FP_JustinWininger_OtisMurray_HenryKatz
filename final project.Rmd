@@ -165,6 +165,7 @@ mplot(nflRushingYardsModel, which=2)
 cooksplot(nflRushingYardsModel)
 summary(nflRushingYardsModel)
 ```
+# College Data
 
 
 ```{r create college dataframe}
@@ -250,7 +251,6 @@ collegeRanks%>%
 
 ```
 
-# College Data
 
 ```{r college visualization}
 gf_point(`Points Per Game`~`Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
