@@ -2,14 +2,16 @@
 title: "Final Project"
 author: "Justin Wininger, Otis Murray, Henry Katz"
 date: "2023-11-29"
-output: html_document
+output: 
+  html_document: 
+    fig_width: 10
 editor_options: 
   chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
 #load necessary packages
-knitr::opts_chunk$set(echo = TRUE, dpi=300)
+knitr::opts_chunk$set(echo = FALSE, dpi=300)
 library("groundhog")
 pkgs <- c('Stat2Data', 'tidyverse', 'mosaic', 'ggformula', 'Lock5Data', 'tinytex', 'car', 'leaps', 'HH', 'rvest', 'dplyr', 'readr', 'ggplot2', 'tidyr', 'readxl', 'esquisse', 'kableExtra', 'ggformula')
 groundhog.library(pkgs, '2023-11-29') #Using the date when project was started
@@ -20,6 +22,8 @@ groundhog.library(pkgs, '2023-11-29') #Using the date when project was started
 This R Markdown Document explores the relationships between Total Yards Per Game (YPG) and the Points Per Game (PPG) that a team scores in both the National Football League (NFL), as well as the Division 1 Football Bowl Subdivision (FBS). These results are then compared to answer the question of whether PPG and YPG have a differing relationship between the NFL and FBS. This project first examines the individual relationships between the NFL teams' YPG and their PPG, as well as examining how passing yards per game (PYPG) and rushing yards per game (RYPG) affect the results. This process is then repeated for the FBS, and then the resulting data is used to conclude how similar these relationships are in the FBS versus the more competitive NFL.
 
 # NFl Data
+
+narrative text here
 
 ```{r create nfl dataframe}
 #create nfl table
@@ -83,33 +87,6 @@ nflOffenseYPG <- subset(nflOffense, select=-c(2:4))
 #order the rows by YPG
 nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
 
-#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
-head(nflOffensePPG)
-head(nflOffenseYPG)
-
-#Create polished tables
-nflOffenseYPG%>%
-  kable(
-    caption="Every NFL team's Yards Per Game in the 2022/2023 NFL Season",
-    booktabs=TRUE,
-    align=c("l", rep("c",6))
-  )%>%
-  kableExtra::kable_styling(
-    bootstrap_options=c("striped", "condensed"),
-    font_size=16
-  )
-
-nflOffensePPG%>%
-  kable(
-    caption="Every NFL team's Points Per Game in the 2022/2023 NFL Season",
-    booktabs=TRUE,
-    align=c("l", rep("c",6))
-  )%>%
-  kableExtra::kable_styling(
-    bootstrap_options=c("striped", "condensed"),
-    font_size=16
-  )
-
 nflOffensePPG <- nflOffensePPG%>%
   mutate(`PPG Rank`= c(1:32))
 nflOffensePPG <- subset(nflOffensePPG, select=-c(2))
@@ -120,8 +97,15 @@ nflOffenseYPG <- subset(nflOffenseYPG, select=-c(2))
 
 nflRanks <- merge(nflOffenseYPG, nflOffensePPG, by = "Team", all = TRUE)
 nflRanks <- nflRanks[order(nflRanks$`PPG`, decreasing = FALSE),]
+nflRanks14 <- head(nflRanks, n=14)
+```
 
-nflRanks%>%
+## NFL Visualizations
+
+Below is a table that attempts to show a relationship between PPG and YPG in the NFL.
+
+```{r nfl table}
+nflRanks14%>%
   kable(
     caption="Every NFL team's rank in PPG and YPG",
     booktabs=TRUE,
@@ -129,44 +113,83 @@ nflRanks%>%
   )%>%
   kableExtra::kable_styling(
     bootstrap_options=c("striped", "condensed"),
-    font_size=16,
+    font_size=16
   )
-
 ```
 
-```{r}
-#esquisse::esquisser(data=offense, viewer = 'browser')
+In this table, the top 14 NFl teams are sorted by their rank (out of 32) in PPG in ascending order. Their rank in YPG is also shown. On the far left is each team's ranking alphabetically. This is done to establish a baseline. This table attempts to show that, in general, the teams ranked highly in PPG are also ranked highly in YPG. For example, the top three teams in PPG, the Kansas City Chiefs, Buffalo Bills, and Philadelphia Eagles respectively, are also the top three teams in YPG, in the same order. The fourth ranked team in PPG, the Dallas Cowboys is only 11th in YPG, so the pattern is not true for all 32 teams. However, of the top 10 teams in PPG, only two are outside the top 10 in YPG, the aforementioned Cowboys and the Seattle Seahawks. Those two teams are ranked 11th and 13th in YPG respectively. The fact that the top 10 teams in PPG are all top 13 in YPG is an excellent indicator that there may be a relationship between PPG and YPG. We will conduct further analysis to see whether there really is a relationship between PPG and YPG or not.
+
+Going further into that exploration, below are three scatterplots. The first shows the relationship between PPG and YPG in the NFl. The second shows the relationship between PPG and PYPG iun the NFl. The third shows the relationship between PPG and RYPG in the NFL.
+
+```{r nfl scatterplots}
+gf_point(`Points Per Game`~`Yards Per Game`, 
+         data=nflOffense, 
+         linewidth=1, 
+         title= 'Points Per Game vs Yards Per Game in the NFL')%>%
+  gf_lm()
+
+gf_point(`Points Per Game`~`Passing Yards Per Game`, 
+         data=nflOffense, 
+         linewidth=1,
+         title= 'Points Per Game vs Passing Yards Per Game in the NFL')%>%
+  gf_lm()
+
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, 
+         data=nflOffense, 
+         linewidth=1,
+         title= 'Points Per Game vs Rushing Yards Per Game in the NFL')%>%
+  gf_lm()
 ```
 
+All three scatterplots show a positive, linear relationship. The first two, PPG vs YPG and PPG vs PYPG respectively, show a very clear and obvious positive linear relationship. The third plot, PPG vs RYPG, shows a less clear and obvious positive linear relationship. There appears to be some correlation, but not a lot. Regardless, the most important thing is that y increases as x increases. This is true for all three plots, whether x is YPG, PYPG, or RYPG.
 
-```{r nfl visualizations}
-gf_point(`Points Per Game`~`Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
-gf_point(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
-gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense, linewidth=1)%>%gf_lm()
+## NFL Analysis
+
+### Simple Linear Regression
+
+We decided to perform simple linear regression to see if PPG and YPG are related. In order to infer, some conditions must be met. The data must be linear, have equal variance, and must be normal. Below are two plots that asses whether or not the conditions are met.
+
+```{r slr anaylsis}
+nflTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
+
+mplot(nflTotalYardsSLRModel, which=1)
+mplot(nflTotalYardsSLRModel, which=2)
+
+nflTotalYardsSLRSummary <- summary(nflTotalYardsSLRModel)
+nflTotalYardsSLROutput <- nflTotalYardsSLRSummary[["coefficients"]]
 ```
 
-```{r regression anaylsis}
-nflTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
-nflPassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=nflOffense)
-nflRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=nflOffense)
+The first condition that must be met is linearity. The explanatory and response variables must have a linear relationship. This was proven by the first scatterplot of PPG and YPG. The linearity condition, therefore, is met. The second condition that must be met is equal variance. The first plot above is a scatterplot of residuals versus fitted values. The points in this plot must show an equal spread across the width. If they do, then the data have equal variance. Our residual vs fitted plot is fairly good. It is certainly not perfect, but nothing ever is in the real world. The plot shows enough spread and no obvious patterns, so the equal variance condition, therefore, is met. The third and final condition that must be met is normality. The data must be normally distributed. A Q-Q plot assesses this condition. If the Q-Q plot shows a strong linear relationship then the data are normal. Our QQ plot shows a relatively strong linear relationship. Like before, it is not perfect, but it is good enough. The normality condition, therefore, is met.
 
-mplot(nflTotalYardsModel, which=1)
-mplot(nflTotalYardsModel, which=2)
-cooksplot(nflTotalYardsModel)
-summary(nflTotalYardsModel)
+Because all the conditions for inference are met, we can now infer from the data. The PPG vs YPG model has a test statistic of $9.842055$ which corresponds to a p-value of $6.620226 × 10^{-11}$.
 
-mplot(nflPassingYardsModel, which=1)
-mplot(nflPassingYardsModel, which=2)
-cooksplot(nflPassingYardsModel)
-summary(nflPassingYardsModel)
+### Multiple Linear Regression
 
-mplot(nflRushingYardsModel, which=1)
-mplot(nflRushingYardsModel, which=2)
-cooksplot(nflRushingYardsModel)
-summary(nflRushingYardsModel)
+We also decided to perform multiple linear regression to see how if PPG is related to PYPG and RYPG. The conditions for inference for multiple linear regression are the same as simple linear regression, with one additional condition. There must not be multicollinearity. Below are plots that asses the conditions for multiple linear regression.
+
+```{r mlr analysis}
+nflMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=nflOffense)
+
+mplot(nflMLRModel, which=1)
+mplot(nflMLRModel, which=2)
+gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=nflOffense)
+vif <- vif(nflMLRModel)
+
+nflMLRSummary<- summary(nflMLRModel)
+nflMLROutput <- nflMLRSummary[["coefficients"]]
 ```
+
+In multiple linear regression, the linearity condition is met if all predictors have a linear relationship. This linear relationship is seen in the second and third scatterplots from the visualization section. Those scatterplots prove that all predictors have a linear relationship, even if some are not that good. The linearity condition, therefore, is met. Unlike linearity, equal variance and normality are the same as before. The residual versus fitted plot shows a decent spread across the width, so the equal variance condition, therefore, is met. The Q-Q plot shows a weak linear relationship, but there still is one. We cannot say for sure if normality is met, but we will still proceed with caution as if it is met. Multicollinearity occurs if two independent variables have a high correlation. The two independent variables are the two explanatory variables, PYPG and RYPG. The third plot, a scatterplot that shows the relationship between PYPG and RYPG, should be a good indicator of if multicollinearity is present or not. If this scatterplot showed a strong relationship, it would be evidence that multicollinearity is present. It does not, however. Additionally, variance inflation factor (VIF) is a direct measure of multicollinearity. Generally, a value of five or above means multicollinearity is present. The VIF value for both predictors is $1.421673$, so the multicollinearity condition, therefore, is met.
+
+All conditions for inference are met. The multiple linear regression model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $9.814515$ which corresponds to a p-value of $1.007533 × 10^{-10}$. For RYPG, the test statistic is $7.282251$ which corresponds to a p-value of $5.086612 × 10^{-8}$.
+
+### Regression Conclusion
+
+All p-values are essentially zero. For the simple linear regression, this means that we have proven that PPG and YPG have a linear relationship. As YPG increases, so does PPG. For the multiple linear regression,this means that we can conclude that both predictors are statistically significant. Both RPYG and PYPG, therefore, significantly affect PPG.
+
 # College Data
 
+narrative text here
 
 ```{r create college dataframe}
 collegeTable <- read_html(
@@ -200,33 +223,6 @@ collegeOffenseYPG <- subset(collegeOffense, select=-c(2:4))
 #order the rows by YPG
 collegeOffenseYPG <- collegeOffenseYPG[order(collegeOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
 
-#compare the two dataframes to see if the teams with the most YPG also have the highest PPG
-head(collegeOffensePPG)
-head(collegeOffenseYPG)
-
-#Create polished tables
-collegeOffenseYPG%>%
-  kable(
-    caption="Every D1 FBS team's Yards Per Game in the 2022/2023 Season",
-    booktabs=TRUE,
-    align=c("l", rep("c",6))
-  )%>%
-  kableExtra::kable_styling(
-    bootstrap_options=c("striped", "condensed"),
-    font_size=16
-  )
-
-collegeOffensePPG%>%
-  kable(
-    caption="Every D1 FBS team's Points Per Game in the 2022/2023 Season",
-    booktabs=TRUE,
-    align=c("l", rep("c",6))
-  )%>%
-  kableExtra::kable_styling(
-    bootstrap_options=c("striped", "condensed"),
-    font_size=16
-  )
-
 collegeOffensePPG <- collegeOffensePPG%>%
   mutate(`PPG Rank`= c(1:131))
 collegeOffensePPG <- subset(collegeOffensePPG, select=-c(2))
@@ -237,8 +233,15 @@ collegeOffenseYPG <- subset(collegeOffenseYPG, select=-c(2))
 
 collegeRanks <- merge(collegeOffenseYPG, collegeOffensePPG, by = "Team", all = TRUE)
 collegeRanks <- collegeRanks[order(collegeRanks$`PPG`, decreasing = FALSE),]
+collegeRanks14 <- head(collegeRanks, n=14)
+```
 
-collegeRanks%>%
+## College Visualizations
+
+Below is a table that attempts to show a relationship between PPG and YPG in College.
+
+```{r college table}
+collegeRanks14%>%
   kable(
     caption="Every college team's rank in PPG and YPG",
     booktabs=TRUE,
@@ -248,35 +251,41 @@ collegeRanks%>%
     bootstrap_options=c("striped", "condensed"),
     font_size=16,
   )
-
 ```
 
+This table is the exact same as the NFL table in how it is formatted. It shows the top 14 teams' ranks in PPG in descending order.
 
-```{r college visualization}
-gf_point(`Points Per Game`~`Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
-gf_point(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
-gf_point(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense, linewidth=1)%>%gf_lm()
+```{r college scatterplots}
+gf_point(`Points Per Game`~`Yards Per Game`, 
+         data=collegeOffense, 
+         linewidth=1, 
+         title= 'Points Per Game vs Yards Per Game in College')%>%
+  gf_lm()
+
+gf_point(`Points Per Game`~`Passing Yards Per Game`, 
+         data=collegeOffense, 
+         linewidth=1, 
+         title= 'Points Per Game vs Passing Yards Per Game in College')%>%
+  gf_lm()
+
+gf_point(`Points Per Game`~`Rushing Yards Per Game`, 
+         data=collegeOffense, 
+         linewidth=1, 
+         title= 'Points Per Game vs Rushing Yards Per Game in College')%>%
+  gf_lm()
 ```
 
-```{r regression analysis}
-collegeTotalYardsModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
-collegePassingYardsModel <- lm(`Points Per Game`~`Passing Yards Per Game`, data=collegeOffense)
-collegeRushingYardsModel <- lm(`Points Per Game`~`Rushing Yards Per Game`, data=collegeOffense)
+```{r college analysis}
+collegeTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
+collegeMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=collegeOffense)
 
-mplot(collegeTotalYardsModel, which=1)
-mplot(collegeTotalYardsModel, which=2)
-cooksplot(collegeTotalYardsModel)
-summary(collegeTotalYardsModel)
+mplot(collegeTotalYardsSLRModel, which=1)
+mplot(collegeTotalYardsSLRModel, which=2)
+summary(collegeTotalYardsSLRModel)
 
-mplot(collegePassingYardsModel, which=1)
-mplot(collegePassingYardsModel, which=2)
-cooksplot(collegePassingYardsModel)
-summary(collegePassingYardsModel)
-
-mplot(collegeRushingYardsModel, which=1)
-mplot(collegeRushingYardsModel, which=2)
-cooksplot(collegeRushingYardsModel)
-summary(collegeRushingYardsModel)
+mplot(collegeMLRModel, which=1)
+mplot(collegeMLRModel, which=2)
+summary(collegeMLRModel)
 ```
 
 ```{r comparative visualizations}
@@ -328,7 +337,6 @@ ggplot(offense) +
 
 
 offenseModel <- lm(`Points Per Game` ~ `Yards Per Game`+IndLevel+`Yards Per Game`*IndLevel, data = offense)
-summary(offenseModel)
 b0 <- summary(offenseModel)$coeff[1,1]
 b1 <- summary(offenseModel)$coeff[2,1]
 b2 <- summary(offenseModel)$coeff[3,1]
@@ -338,7 +346,6 @@ gf_abline(intercept = b0, slope = b1, color = "red") %>%
 gf_abline(intercept = b0+b2, slope = b1+b3, color = "blue")
 
 passingOffenseModel <- lm(`Points Per Game` ~ `Passing Yards Per Game`+IndLevel+`Passing Yards Per Game`*IndLevel, data = offense)
-summary(passingOffenseModel)
 pb0 <- summary(passingOffenseModel)$coeff[1,1]
 pb1 <- summary(passingOffenseModel)$coeff[2,1]
 pb2 <- summary(passingOffenseModel)$coeff[3,1]
@@ -348,7 +355,6 @@ gf_abline(intercept = pb0, slope = pb1, color = "red") %>%
 gf_abline(intercept = pb0+pb2, slope = pb1+pb3, color = "blue")
 
 rushingOffenseModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game`+IndLevel+`Rushing Yards Per Game`*IndLevel, data = offense)
-summary(rushingOffenseModel)
 rb0 <- summary(rushingOffenseModel)$coeff[1,1]
 rb1 <- summary(rushingOffenseModel)$coeff[2,1]
 rb2 <- summary(rushingOffenseModel)$coeff[3,1]
@@ -356,7 +362,29 @@ rb3 <- summary(rushingOffenseModel)$coeff[4,1]
 gf_point(`Points Per Game` ~ `Rushing Yards Per Game`, color=~Level, data = offense) %>%
 gf_abline(intercept = rb0, slope = rb1, color = "red") %>%
 gf_abline(intercept = rb0+rb2, slope = rb1+rb3, color = "blue")
-
-gf_point(`Points Per Game` ~ `Yards Per Game`, data = offense)%>%gf_lm
 ```
 
+```{r comparitave anaylsys}
+totalYardsANCOVAModel <- lm(`Points Per Game` ~ `Yards Per Game` + Level, data=offense)
+anova(totalYardsANCOVAModel)
+
+passingYardsANCOVAModel <- lm(`Points Per Game` ~ `Passing Yards Per Game` + Level, data=offense)
+anova(passingYardsANCOVAModel)
+
+rushingYardsANCOVAModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game` + Level, data=offense)
+anova(rushingYardsANCOVAModel)
+```
+
+# Conclusion
+
+narrative text here
+
+\newpage
+
+# Code Appendix
+
+```{r codeAppedix}
+#| ref.label = knitr::all_labels(),
+#| echo = TRUE,
+#| eval = FALSE
+```
