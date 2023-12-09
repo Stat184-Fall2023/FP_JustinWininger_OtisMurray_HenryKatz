@@ -19,14 +19,14 @@ groundhog.library(pkgs, '2023-11-29') #Using the date when project was started
 
 # Introduction
 
-This R Markdown Document explores the relationships between Total Yards Per Game (YPG) and the Points Per Game (PPG) that a team scores in both the National Football League (NFL), as well as the Division 1 Football Bowl Subdivision (FBS). These results are then compared to answer the question of whether PPG and YPG have a differing relationship between the NFL and FBS. This project first examines the individual relationships between the NFL teams' YPG and their PPG, as well as examining how passing yards per game (PYPG) and rushing yards per game (RYPG) affect the results. This process is then repeated for the FBS, and then the resulting data is used to conclude how similar these relationships are in the FBS versus the more competitive NFL.
+This project explores the relationships between Total Yards Per Game (YPG) and the Points Per Game (PPG) that a team scores in both the National Football League (NFL), as well as the Division 1 Football Bowl Subdivision (FBS) of College football. These results are then compared to answer the question of whether PPG and YPG have a differing relationship between the NFL and FBS. This project first examines the individual relationships between the NFL teams' YPG and their PPG, as well as examining how passing yards per game (PYPG) and rushing yards per game (RYPG) affect those results. This process is then repeated for the FBS, and then the resulting data is used to conclude how similar these relationships are in the FBS versus the more competitive NFL. This project heavily relies on simple linear regression (SLR), multiple linear regression (MLR), and analysis of covariance (ANCOVA) in order to display the differing trends between PPG and the YPG.
 
 # NFl Data
 
-narrative text here
+First, we set off to explore the NFL data set that we scraped from pro-football-reference.com. This data set included a table with all 32 NFL teams, as well as statistics such as total yards, total passing yards, total rushing yards, etc. We then proceeded to tidy this table into one that only involved the Team, PPG, YPG, PYPG, and RYPG. Using this table we then created scatter plots for the three relationships: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Using these scatter plots we will analyze using SLR, MLR, and finally ANCOVA.
 
 ```{r create nfl dataframe}
-#create nfl table
+#create NFL table
 nflTable <- read_html(
   x = "http://pfref.com/pi/share/d7riA"
 ) %>%
@@ -117,9 +117,9 @@ nflRanks14%>%
   )
 ```
 
-In this table, the top 14 NFl teams are sorted by their rank (out of 32) in PPG in ascending order. Their rank in YPG is also shown. On the far left is each team's ranking alphabetically. This is done to establish a baseline. This table attempts to show that, in general, the teams ranked highly in PPG are also ranked highly in YPG. For example, the top three teams in PPG, the Kansas City Chiefs, Buffalo Bills, and Philadelphia Eagles respectively, are also the top three teams in YPG, in the same order. The fourth ranked team in PPG, the Dallas Cowboys is only 11th in YPG, so the pattern is not true for all 32 teams. However, of the top 10 teams in PPG, only two are outside the top 10 in YPG, the aforementioned Cowboys and the Seattle Seahawks. Those two teams are ranked 11th and 13th in YPG respectively. The fact that the top 10 teams in PPG are all top 13 in YPG is an excellent indicator that there may be a relationship between PPG and YPG. We will conduct further analysis to see whether there really is a relationship between PPG and YPG or not.
+In this table, the top 14 NFL teams are sorted by their rank (out of 32) in PPG in ascending order. Their rank in YPG is also shown. On the far left is each team's ranking alphabetically. This is done to establish a baseline. This table attempts to show that, in general, the teams ranked highly in PPG are also ranked highly in YPG. For example, the top three teams in PPG, the Kansas City Chiefs, Buffalo Bills, and Philadelphia Eagles respectively, are also the top three teams in YPG, in the same order. The fourth ranked team in PPG, the Dallas Cowboys is only 11th in YPG, so the pattern is not true for all 32 teams. However, of the top 10 teams in PPG, only two are outside the top 10 in YPG, the aforementioned Cowboys and the Seattle Seahawks. Those two teams are ranked 11th and 13th in YPG respectively. The fact that the top 10 teams in PPG are all top 13 in YPG is an excellent indicator that there may be a relationship between PPG and YPG. We will conduct further analysis to see whether there really is a relationship between PPG and YPG or not.
 
-Going further into that exploration, below are three scatterplots. The first shows the relationship between PPG and YPG in the NFl. The second shows the relationship between PPG and PYPG iun the NFl. The third shows the relationship between PPG and RYPG in the NFL.
+Going further into that exploration, below are three scatter plots. The first shows the relationship between PPG and YPG in the NFL. The second shows the relationship between PPG and PYPG in the NFL. The third shows the relationship between PPG and RYPG in the NFL.
 
 ```{r nfl scatterplots}
 gf_point(`Points Per Game`~`Yards Per Game`, 
@@ -141,7 +141,7 @@ gf_point(`Points Per Game`~`Rushing Yards Per Game`,
   gf_lm()
 ```
 
-All three scatterplots show a positive, linear relationship. The first two, PPG vs YPG and PPG vs PYPG respectively, show a very clear and obvious positive linear relationship. The third plot, PPG vs RYPG, shows a less clear and obvious positive linear relationship. There appears to be some correlation, but not a lot. Regardless, the most important thing is that y increases as x increases. This is true for all three plots, whether x is YPG, PYPG, or RYPG.
+All three scatter plots show a positive, linear relationship. The first two, PPG vs YPG and PPG vs PYPG respectively, show a very clear and obvious positive linear relationship. The third plot, PPG vs RYPG, shows a less clear and obvious positive linear relationship. There appears to be some correlation, but not a lot. Regardless, the most important thing is that y increases as x increases. This is true for all three plots, whether x is YPG, PYPG, or RYPG.
 
 ## NFL Analysis
 
@@ -159,7 +159,7 @@ nflTotalYardsSLRSummary <- summary(nflTotalYardsSLRModel)
 nflTotalYardsSLROutput <- nflTotalYardsSLRSummary[["coefficients"]]
 ```
 
-The first condition that must be met is linearity. The explanatory and response variables must have a linear relationship. This was proven by the first scatterplot of PPG and YPG. The linearity condition, therefore, is met. The second condition that must be met is equal variance. The first plot above is a scatterplot of residuals versus fitted values. The points in this plot must show an equal spread across the width. If they do, then the data have equal variance. Our residual vs fitted plot is fairly good. It is certainly not perfect, but nothing ever is in the real world. The plot shows enough spread and no obvious patterns, so the equal variance condition, therefore, is met. The third and final condition that must be met is normality. The data must be normally distributed. A Q-Q plot assesses this condition. If the Q-Q plot shows a strong linear relationship then the data are normal. Our QQ plot shows a relatively strong linear relationship. Like before, it is not perfect, but it is good enough. The normality condition, therefore, is met.
+The first condition that must be met is linearity. The explanatory and response variables must have a linear relationship. This was proven by the first scatter plot of PPG and YPG. The linearity condition, therefore, is met. The second condition that must be met is equal variance. The first plot above is a scatter plot of residuals versus fitted values. The points in this plot must show an equal spread across the width. If they do, then the data have equal variance. Our residual vs fitted plot is fairly good. It is certainly not perfect, but nothing ever is in the real world. The plot shows enough spread and no obvious patterns, so the equal variance condition, therefore, is met. The third and final condition that must be met is normality. The data must be normally distributed. A Q-Q plot assesses this condition. If the Q-Q plot shows a strong linear relationship then the data are normal. Our QQ plot shows a relatively strong linear relationship. Like before, it is not perfect, but it is good enough. The normality condition, therefore, is met.
 
 Because all the conditions for inference are met, we can now infer from the data. The PPG vs YPG model has a test statistic of $9.842055$ which corresponds to a p-value of $6.620226 × 10^{-11}$.
 
@@ -179,7 +179,7 @@ nflMLRSummary<- summary(nflMLRModel)
 nflMLROutput <- nflMLRSummary[["coefficients"]]
 ```
 
-In multiple linear regression, the linearity condition is met if all predictors have a linear relationship. This linear relationship is seen in the second and third scatterplots from the visualization section. Those scatterplots prove that all predictors have a linear relationship, even if some are not that good. The linearity condition, therefore, is met. Unlike linearity, equal variance and normality are the same as before. The residual versus fitted plot shows a decent spread across the width, so the equal variance condition, therefore, is met. The Q-Q plot shows a weak linear relationship, but there still is one. We cannot say for sure if normality is met, but we will still proceed with caution as if it is met. Multicollinearity occurs if two independent variables have a high correlation. The two independent variables are the two explanatory variables, PYPG and RYPG. The third plot, a scatterplot that shows the relationship between PYPG and RYPG, should be a good indicator of if multicollinearity is present or not. If this scatterplot showed a strong relationship, it would be evidence that multicollinearity is present. It does not, however. Additionally, variance inflation factor (VIF) is a direct measure of multicollinearity. Generally, a value of five or above means multicollinearity is present. The VIF value for both predictors is $1.421673$, so the multicollinearity condition, therefore, is met.
+In multiple linear regression, the linearity condition is met if all predictors have a linear relationship. This linear relationship is seen in the second and third scatter plots from the visualization section. Those scatter plots prove that all predictors have a linear relationship, even if some are not that good. The linearity condition, therefore, is met. Unlike linearity, equal variance and normality are the same as before. The residual versus fitted plot shows a decent spread across the width, so the equal variance condition, therefore, is met. The Q-Q plot shows a weak linear relationship, but there still is one. We cannot say for sure if normality is met, but we will still proceed with caution as if it is met. Multicollinearity occurs if two independent variables have a high correlation. The two independent variables are the two explanatory variables, PYPG and RYPG. The third plot, a scatter plot that shows the relationship between PYPG and RYPG, should be a good indicator of if multicollinearity is present or not. If this scatter plot showed a strong relationship, it would be evidence that multicollinearity is present. It does not, however. Additionally, variance inflation factor (VIF) is a direct measure of multicollinearity. Generally, a value of five or above means multicollinearity is present. The VIF value for both predictors is $1.421673$, so the multicollinearity condition, therefore, is met.
 
 All conditions for inference are met. The multiple linear regression model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $9.814515$ which corresponds to a p-value of $1.007533 × 10^{-10}$. For RYPG, the test statistic is $7.282251$ which corresponds to a p-value of $5.086612 × 10^{-8}$.
 
@@ -189,7 +189,9 @@ All p-values are essentially zero. For the simple linear regression, this means 
 
 # College Data
 
-narrative text here
+#First, we set off to explore the NFL data set that we scraped from pro-football-reference.com. This data set included a table with all 32 NFL teams, as well as statistics such as total yards, total passing yards, total rushing yards, etc. We then proceeded to tidy this table into one that only involved the Team, PPG, YPG, PYPG, and RYPG. Using this table we then created scatter plots for the three relationships: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Using these scatter plots we will analyze using SLR, MLR, and finally ANCOVA.
+
+Below we examine the College Football data set that we wrangled from sports-reference.com. Unlike the NFL data set, likely due to the large difference in number of teams, this data set had far less unnecessary statistics that had to be removed in order to create a tided table. The data was then examined for the same relationships as the NFL data set: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Further, we then created three more scatter plots and repeated the process of analyzing them using SLR, MLR, and ANCOVA.
 
 ```{r create college dataframe}
 collegeTable <- read_html(
