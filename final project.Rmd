@@ -297,7 +297,7 @@ collegeTotalYardsSLRSummary <- summary(collegeTotalYardsSLRModel)
 collegeTotalYardsSLROutput <- collegeTotalYardsSLRSummary[["coefficients"]]
 ```
 
-The conditions for inference, linearity, equal variance, and normality are the same for all instances of SLR. The data are linear because the scatterplot of PPG vs YPG shows a strong and obvious linear relationship. The linearity condition, therefore, is met. The residuals versus fitted plot shows a nice even spread. The equal variance condition, therefore, is met. Finally, the Q-Q plot shows a strong linear relationship, so the normality condition, therefore, is met.
+The conditions for inference, linearity, equal variance, and normality are the same for all instances of SLR. The data are linear because the scatter plot of PPG vs YPG shows a strong and obvious linear relationship. The linearity condition, therefore, is met. The residuals versus fitted plot shows a nice even spread. The equal variance condition, therefore, is met. Finally, the Q-Q plot shows a strong linear relationship, so the normality condition, therefore, is met.
 
 All conditions for inference are met. This model has a test statistic of $27.409820$ which corresponds to a p-value of $1.213549 × 10^{-55}$.
 
@@ -317,7 +317,7 @@ collegeMLRSummary<- summary(collegeMLRModel)
 collegeMLROutput <- collegeMLRSummary[["coefficients"]]
 ```
 
-The linearity condition is met because, as seen in the second and third scatterplot, all predictors have a relatively strong linear relationship. The residuals versus fitted plot shows a nice spread, so the equal variance condition is met. The Q-Q plot shows a very strong linear relationship, so the normality condition is met. Finally, because the scatterplot of PYPG vs RYPG does how show a relationship, and the individual VIF values are only 1.057908, multicollinearity is not present, so the multicollinearity condition, therefore, is met.
+The linearity condition is met because, as seen in the second and third scatter plot, all predictors have a relatively strong linear relationship. The residuals versus fitted plot shows a nice spread, so the equal variance condition is met. The Q-Q plot shows a very strong linear relationship, so the normality condition is met. Finally, because the scatter plot of PYPG vs RYPG does how show a relationship, and the individual VIF values are only 1.057908, multicollinearity is not present, so the multicollinearity condition, therefore, is met.
 
 All conditions for inference are met. The MLR model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $22.620628$ which corresponds to a p-value of $1.494167 × 10^{-46}$. For RYPG, the test statistic is $20.271545$ which corresponds to a p-value of $8.880033 × 10^{-42}$.
 
@@ -327,11 +327,11 @@ We reach the same conclusion as the NFL data. All p-values are essentially zero.
 
 # Comparison
 
-narrative text here
+Using these conclusions we can see that when comparing the YPG v.s. PPG relationship between the NFL and FBS, they both display similar results. Despite, the two leagues experiencing differing levels of competition, all 6 relationships over the two leagues were statistically significant. Below we are going to compare these relationships using comparative visualizations, specifically using scatter plots with least-square regression lines. We are then going to further compare these relationships using MLR. We're comparing all 6 of these relationships because we want to make sure that we check not only if the relationship between YPG and PPG differ between NFL and College, but if they differ between PYPG/RYPG and PPG as well. This extra layer of comparison just adds to the initial question about whether YPG affects PPG, as it helps us narrow down how the passing yards or rushing yards influence this relationship.
 
 ## Comparative Visualizations
 
-To see how the relationship between PPG and YPG, PYPG, and RYPG is different for the NFL versus College, scatterplots with the two on the same axis separated by level of competition would be helpful. Below are three scatterplots, each containing points from both levels of competition. These plots do contain the least-squares regression line for each level. This was done to make it easier to see how the relationships differ at each level. The first plot shows the relationship between PPG and YPG by level of competition. The second shows the relationship between YPG and PYPG by level of competition. The third shows the relationship between YPG and RYPG by level of competition.
+To see how the relationship between PPG and YPG, PYPG, and RYPG is different for the NFL versus College, scatter plots with the two on the same axis separated by level of competition would be helpful. Below are three scatter plots, each containing points from both levels of competition. These plots do contain the least-squares regression line for each level. This was done to make it easier to see how the relationships differ at each level. The first plot shows the relationship between PPG and YPG by level of competition. The second shows the relationship between YPG and PYPG by level of competition. The third shows the relationship between YPG and RYPG by level of competition.
 
 ```{r comparative visualizaions}
 collegeOffense <- collegeOffense%>%
