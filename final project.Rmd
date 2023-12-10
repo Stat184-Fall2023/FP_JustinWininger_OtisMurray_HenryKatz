@@ -5,16 +5,15 @@ date: "2023-11-29"
 output: 
   html_document: 
     fig_width: 10
-editor_options: 
-  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
+#tidyverse style guide
 #load necessary packages
 knitr::opts_chunk$set(echo = FALSE, dpi=300)
 library("groundhog")
 pkgs <- c('Stat2Data', 'tidyverse', 'mosaic', 'ggformula', 'Lock5Data', 'tinytex', 'car', 'leaps', 'HH', 'rvest', 'dplyr', 'readr', 'ggplot2', 'tidyr', 'readxl', 'esquisse', 'kableExtra', 'ggformula')
-groundhog.library(pkgs, '2023-11-29') #Using the date when project was started
+groundhog.library(pkgs, '2023-11-29')
 ```
 
 # Introduction
@@ -46,9 +45,6 @@ nflOffense <- nflOffense%>%rename(
 
 #squish team names
 nflOffense$Team <- sub(".*\\s", "", nflOffense$Team)
-
-#rearrange column order
-#nflOffense <- nflOffense[,c("Team", "Games","Points","Yards")]
 
 #make every cell a number versus a character
 nflOffense$Games <- as.numeric(nflOffense$Games)
@@ -87,16 +83,21 @@ nflOffenseYPG <- subset(nflOffense, select=-c(2:4))
 #order the rows by YPG
 nflOffenseYPG <- nflOffenseYPG[order(nflOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
 
+#rank NFL teams by PPG
 nflOffensePPG <- nflOffensePPG%>%
   mutate(`PPG Rank`= c(1:32))
 nflOffensePPG <- subset(nflOffensePPG, select=-c(2))
 
+#rank NFL teams by YPG
 nflOffenseYPG <- nflOffenseYPG%>%
   mutate(`YPG Rank`= c(1:32))
 nflOffenseYPG <- subset(nflOffenseYPG, select=-c(2))
 
+#merge ranked data frames
 nflRanks <- merge(nflOffenseYPG, nflOffensePPG, by = "Team", all = TRUE)
 nflRanks <- nflRanks[order(nflRanks$`PPG`, decreasing = FALSE),]
+
+#only include the top 14 teams by PPG
 nflRanks14 <- head(nflRanks, n=14)
 ```
 
@@ -105,6 +106,7 @@ nflRanks14 <- head(nflRanks, n=14)
 Below is a table that attempts to show a relationship between PPG and YPG in the NFL.
 
 ```{r nfl table}
+#create a nice-looking table
 nflRanks14%>%
   kable(
     caption="Every NFL team's rank in PPG and YPG",
@@ -121,19 +123,22 @@ In this table, the top 14 NFL teams are sorted by their rank (out of 32) in PPG 
 
 Going further into that exploration, below are three scatter plots. The first shows the relationship between PPG and YPG in the NFL. The second shows the relationship between PPG and PYPG in the NFL. The third shows the relationship between PPG and RYPG in the NFL.
 
-```{r nfl scatterplots}
+```{r nfl scatter plots}
+#create scatter plot to show PPG vs YPG
 gf_point(`Points Per Game`~`Yards Per Game`, 
          data=nflOffense, 
          linewidth=1, 
          title= 'Points Per Game vs Yards Per Game in the NFL')%>%
   gf_lm()
 
+#create scatter plot to show PPG vs PYPG
 gf_point(`Points Per Game`~`Passing Yards Per Game`, 
          data=nflOffense, 
          linewidth=1,
          title= 'Points Per Game vs Passing Yards Per Game in the NFL')%>%
   gf_lm()
 
+##create scatter plot to show PPG vs RYPG
 gf_point(`Points Per Game`~`Rushing Yards Per Game`, 
          data=nflOffense, 
          linewidth=1,
@@ -150,11 +155,14 @@ All three scatter plots show a positive, linear relationship. The first two, PPG
 We decided to perform SLR to see if PPG and YPG are related. In order to infer, some conditions must be met. The data must be linear, have equal variance, and must be normal. Below are two plots that asses whether or not the conditions are met.
 
 ```{r nfl slr anaylsis}
+#create an SLR model
 nflTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
 
+#create plots to examine conditions for inference
 mplot(nflTotalYardsSLRModel, which=1)
 mplot(nflTotalYardsSLRModel, which=2)
 
+#create a matrix for output so it doesn't output into the file
 nflTotalYardsSLRSummary <- summary(nflTotalYardsSLRModel)
 nflTotalYardsSLROutput <- nflTotalYardsSLRSummary[["coefficients"]]
 ```
@@ -168,13 +176,16 @@ Because all the conditions for inference are met, we can now infer from the data
 We also decided to perform MLR to see if PPG is related to PYPG and RYPG. The conditions for inference for MLR are the same as SLR, with one additional condition. There must not be multicollinearity. Below are plots that asses the conditions for MLR.
 
 ```{r nfl mlr analysis}
+#create an MLR model
 nflMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=nflOffense)
 
+#create plots to examine conditions for inference
 mplot(nflMLRModel, which=1)
 mplot(nflMLRModel, which=2)
 gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=nflOffense, title='PYPG vs RYPG in the NFL')
 nflVif <- vif(nflMLRModel)
 
+#create a matrix for output so it doesn't output into the file
 nflMLRSummary<- summary(nflMLRModel)
 nflMLROutput <- nflMLRSummary[["coefficients"]]
 ```
@@ -194,6 +205,7 @@ All p-values are essentially zero. For the SLR, this means that we have proven t
 Below we examine the College Football data set that we wrangled from sports-reference.com. Unlike the NFL data set, likely due to the large difference in number of teams, this data set had far less unnecessary statistics that had to be removed in order to create a tided table. The data was then examined for the same relationships as the NFL data set: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Further, we then created three more scatter plots and repeated the process of analyzing them using SLR, MLR, and ANCOVA.
 
 ```{r create college dataframe}
+#scrape data from website
 collegeTable <- read_html(
   x = "https://www.sports-reference.com/cfb/years/2022-team-offense.html"
 ) %>%
@@ -201,13 +213,18 @@ collegeTable <- read_html(
   html_table()
 collegeOffense <- collegeTable[[1]]
 
+#remove unnecessary columns
 collegeOffense <- subset(collegeOffense, select=-c(1, 3, 5:7, 9:10, 12:14, 16:25))
 
+#rename column titles to match with NFL titles
 collegeOffense <- collegeOffense%>%rename(
    `Team`=1, `Points Per Game`=2, `Passing Yards Per Game`=3, `Rushing Yards Per Game`=4, `Yards Per Game`=5
  )
+
+#remove unnecessary rows
 collegeOffense <- collegeOffense[-c(1, 22:23, 44:45, 66:67, 88:89, 110:111, 132:133),]
 
+#make every number numeric, because some were character
 collegeOffense$`Points Per Game` <- as.numeric(collegeOffense$`Points Per Game`)
 collegeOffense$`Passing Yards Per Game` <- as.numeric(collegeOffense$`Passing Yards Per Game`)
 collegeOffense$`Rushing Yards Per Game` <- as.numeric(collegeOffense$`Rushing Yards Per Game`)
@@ -225,14 +242,17 @@ collegeOffenseYPG <- subset(collegeOffense, select=-c(2:4))
 #order the rows by YPG
 collegeOffenseYPG <- collegeOffenseYPG[order(collegeOffenseYPG$`Yards Per Game`, decreasing = TRUE),]
 
+#rank every team by PPG
 collegeOffensePPG <- collegeOffensePPG%>%
   mutate(`PPG Rank`= c(1:131))
 collegeOffensePPG <- subset(collegeOffensePPG, select=-c(2))
 
+#rank every team by YPG
 collegeOffenseYPG <- collegeOffenseYPG%>%
   mutate(`YPG Rank`= c(1:131))
 collegeOffenseYPG <- subset(collegeOffenseYPG, select=-c(2))
 
+#merge ranked data frames
 collegeRanks <- merge(collegeOffenseYPG, collegeOffensePPG, by = "Team", all = TRUE)
 collegeRanks <- collegeRanks[order(collegeRanks$`PPG`, decreasing = FALSE),]
 collegeRanks14 <- head(collegeRanks, n=14)
@@ -243,6 +263,7 @@ collegeRanks14 <- head(collegeRanks, n=14)
 Below is a table that attempts to show a relationship between PPG and YPG in College.
 
 ```{r college table}
+#create a nice looking table
 collegeRanks14%>%
   kable(
     caption="Every college team's rank in PPG and YPG",
@@ -260,18 +281,21 @@ This table is the exact same as the NFL table in how it is formatted. It shows t
 Delving deeper into our analysis, below are three scatter plots. They are the same plots in the same order as before, just with data from college teams as opposed to NFL teams. The first shows the relationship between PPG and YPG. The second shows the relationship between PPG and PYPG. The third shows the relationship between PPG and RYPG.
 
 ```{r college scatterplots}
+#create scatter plot to show PPG vs YPG
 gf_point(`Points Per Game`~`Yards Per Game`, 
          data=collegeOffense, 
          linewidth=1, 
          title= 'Points Per Game vs Yards Per Game in College')%>%
   gf_lm()
 
+#create scatter plot to show PPG vs PYPG
 gf_point(`Points Per Game`~`Passing Yards Per Game`, 
          data=collegeOffense, 
          linewidth=1, 
          title= 'Points Per Game vs Passing Yards Per Game in College')%>%
   gf_lm()
 
+#create scatter plot to show PPG vs RYPG
 gf_point(`Points Per Game`~`Rushing Yards Per Game`, 
          data=collegeOffense, 
          linewidth=1, 
@@ -288,11 +312,14 @@ Like before, all three plots show a positive linear relationship. All three appe
 We wanted to perform SLR to see if PPG and YPG are related. Like before, the conditions for inference must be met. Below are two plots that attempt to assess these conditions.
 
 ```{r college slr analysis}
+#create an SLR model
 collegeTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
 
+#create plots to assess conditions
 mplot(collegeTotalYardsSLRModel, which=1)
 mplot(collegeTotalYardsSLRModel, which=2)
 
+#create matrix so output isn't in file
 collegeTotalYardsSLRSummary <- summary(collegeTotalYardsSLRModel)
 collegeTotalYardsSLROutput <- collegeTotalYardsSLRSummary[["coefficients"]]
 ```
@@ -306,13 +333,16 @@ All conditions for inference are met. This model has a test statistic of $27.409
 Like the NFL analysis, we have also decided to perform MLR to see if PPG is related to PYPG and RYPG. The conditions that must be met are linearity, equal variance, normality, and multicollinearity. Below are plots that assess whether or not those conditions are met.
 
 ```{r college mlr analysis}
+#create an SLR model
 collegeMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=collegeOffense)
 
+#create plots to assess conditions
 mplot(collegeMLRModel, which=1)
 mplot(collegeMLRModel, which=2)
 gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=collegeOffense, title='PYPG vs RYPG in College')
 collegeVif <- vif(collegeMLRModel)
 
+#create matrix so output isn't in file
 collegeMLRSummary<- summary(collegeMLRModel)
 collegeMLROutput <- collegeMLRSummary[["coefficients"]]
 ```
@@ -334,13 +364,19 @@ narrative text here
 To see how the relationship between PPG and YPG, PYPG, and RYPG is different for the NFL versus College, scatterplots with the two on the same axis separated by level of competition would be helpful. Below are three scatterplots, each containing points from both levels of competition. These plots do contain the least-squares regression line for each level. This was done to make it easier to see how the relationships differ at each level. The first plot shows the relationship between PPG and YPG by level of competition. The second shows the relationship between YPG and PYPG by level of competition. The third shows the relationship between YPG and RYPG by level of competition.
 
 ```{r comparative visualizaions}
+#add level of competition to data frames
 collegeOffense <- collegeOffense%>%
   mutate(`Level`= "College")
 nflOffense <- nflOffense%>%
   mutate(`Level`= "NFL")
+
+#merge data frames
 offense <- rbind(nflOffense,collegeOffense)
+
+#create new variable that is categorical but still a number for future MLR
 offense$IndLevel <- as.numeric(offense$Level=="NFL")
 
+#make visualization of PPG vs YPG by level and include line of best fit
 offenseModel <- lm(`Points Per Game` ~ `Yards Per Game`+IndLevel+`Yards Per Game`*IndLevel, data = offense)
 b0 <- summary(offenseModel)$coeff[1,1]
 b1 <- summary(offenseModel)$coeff[2,1]
@@ -353,6 +389,7 @@ gf_point(`Points Per Game` ~ `Yards Per Game`,
 gf_abline(intercept = b0, slope = b1, color = "red") %>%
 gf_abline(intercept = b0+b2, slope = b1+b3, color = "blue")
 
+#make visualization of PPG vs PYPG by level and include line of best fit
 passingOffenseModel <- lm(`Points Per Game` ~ `Passing Yards Per Game`+IndLevel+`Passing Yards Per Game`*IndLevel, data = offense)
 pb0 <- summary(passingOffenseModel)$coeff[1,1]
 pb1 <- summary(passingOffenseModel)$coeff[2,1]
@@ -365,6 +402,7 @@ gf_point(`Points Per Game` ~ `Passing Yards Per Game`,
 gf_abline(intercept = pb0, slope = pb1, color = "red") %>%
 gf_abline(intercept = pb0+pb2, slope = pb1+pb3, color = "blue")
 
+#make visualization of PPG vs RYPG by level and include line of best fit
 rushingOffenseModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game`+IndLevel+`Rushing Yards Per Game`*IndLevel, data = offense)
 rb0 <- summary(rushingOffenseModel)$coeff[1,1]
 rb1 <- summary(rushingOffenseModel)$coeff[2,1]
@@ -384,29 +422,50 @@ These three plots are very intriguing. The first plot shows that the relationshi
 
 To analyze whether the level of competition affects any of the three relationships we've been observing so far, we will perform more MLR.
 
-### Points per Game versus Yards per Game 
+### Conditions for Inference
 
+To infer from the results of MLR, all conditions for inference must be met. The conditions are the same as before. Multicollinearity cannot be an issue this time, though, because there is only one quantitative predictor. So we can safely say the condition is met. Below are six plots, three residual versus fitted, and three Q-Q plots. The first residual versus fitted and Q-Q plot are about the the relationship between YPG and YPG by level of competition. The second residual versus fitted and Q-Q plot are about the the relationship between YPG and PYPG by level of competition. The third residual versus fitted and Q-Q plot are about the the relationship between YPG and RYPG by level of competition.
 
+```{r comparative analysis}
+#create MLR models
+totalYardsMLRModel <- lm(`Points Per Game` ~ `Yards Per Game` + IndLevel , data=offense)
+passingYardsMLRModel <- lm(`Points Per Game` ~ `Passing Yards Per Game` + IndLevel , data=offense)
+rushingYardsMLRModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game` + IndLevel , data=offense)
 
-```{r ppg vs ypg MLR}
-totalYardsMLRModel <- lm(`Points Per Game` ~ `Yards Per Game` + Level, data=offense)
-mplot(collegeMLRModel, which=1)
-mplot(collegeMLRModel, which=2)
+#make plots to assess conditions
+mplot(totalYardsMLRModel, which=1)
+mplot(totalYardsMLRModel, which=2)
+mplot(passingYardsMLRModel, which=1)
+mplot(passingYardsMLRModel, which=2)
+mplot(rushingYardsMLRModel, which=1)
+mplot(rushingYardsMLRModel, which=2)
+
+#make matrix so output isn't in file
+totalYardsMLRSummary<- summary(totalYardsMLRModel)
+totalYardsMLROutput <- totalYardsMLRSummary[["coefficients"]]
+passingYardsMLRSummary<- summary(passingYardsMLRModel)
+passingYardsMLROutput <- passingYardsMLRSummary[["coefficients"]]
+rushingYardsMLRSummary<- summary(rushingYardsMLRModel)
+rushingYardsMLROutput <- rushingYardsMLRSummary[["coefficients"]]
 ```
 
-```{r ppg vs pypg ancova}
-passingYardsANCOVAModel <- lm(`Points Per Game` ~ `Passing Yards Per Game` + Level, data=offense)
-anova(passingYardsANCOVAModel)
-```
+All six plots were lumped together instead of being analyzed individually because they all have the same result. All three residual versus fitted plots show an even spread, so all three models meet the equal variance condition. Similarly, all three Q-Q plots show a very strong linear relationship, so the normality condition is met for all three models. Linearity is also met for all three, because of the scatter plots shown earlier. All predictors have a linear relationship, so the linearity condition, therefore, is met for all three models. All conditions for all models are met.
 
-```{r ppg vs rypg ancova}
-rushingYardsANCOVAModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game` + Level, data=offense)
-anova(rushingYardsANCOVAModel)
-```
+### Points per Game versus Yards per Game
+
+The PPG vs YPG model has two predictors, one for YPG and one for level of competition. The YPG predictor has a test statistic of $29.837410$ which corresponds to a p-value of $2.884682 × 10^{-67}$. For level of competition, the test statistic is $-1.482403$ which corresponds to a p-value of $0.1402001$. The YPG term is significant at the 0.05 level, but the level term is not. The YPG term being significant means that YPG affects PPG, which we already knew. But, the level term being insignificant means that the relationships between PPG and YPG by level of competition are not significantly different. This means that there is not enough evidence to conclude that the relationship between YPG and PPG at the NFL level and the relationship between YPG and PPG at the college level are different.
+
+### Points per Game versus Passing Yards per Game
+
+The PPG vs YPG model has two predictors, one for PYPG and one for level of competition. The PYPG predictor has a test statistic of $9.949669$ which corresponds to a p-value of $1.861977 × 10^{-18}$. For level of competition, the test statistic is $-5.039062$ which corresponds to a p-value of $1.252203 × 10^{-6}$. The PYPG term is significant, which means that, like before, PYPG affects PPG, which we already knew. The level term being significant means that there is sufficient evidence to conclude that the relationships between PPG and PYPG by level of competition are different.
+
+### Points per Game versus Rushing Yards per Game
+
+The PPG vs YPG model has two predictors, one for RYPG and one for level of competition. The RYPG predictor has a test statistic of $7.313959$ which corresponds to a p-value of $1.177076 × 10^{-11}$. For level of competition, the test statistic is $-2.860394$ which corresponds to a p-value of $4.796173 × 10^{-3}$. The RYPG term is significant, which means that RYPG affects PPG, but we already knew that. The level term is significant, which means that like before, here is sufficient evidence to conclude that the relationships between PPG and RYPG by level of competition are different.
 
 # Conclusion
 
-narrative text here
+This project has explored the relationship between PPG and YPG, PPG and PYPG, and PPG and RYPG at the NFL level of competition and the collegiate level of competition. Then, it compared those relationships to see if the NFL relationship differed from the collegiate relationship. To accomplish this, we first needed data to an analyze. We scraped data from pro-football-reference.com and sports-reference.com. We then had to wrangle the data. Then, we performed various exploratory data analysis, the majority of which was creating visualizations to see if those relationships were worth exploring. We determined that they were, and then began to analyze. We first performed SLR twice on the relationship between PPG and YPG at each level of competition. After checking the conditions for inference, we determined that for both levels, YPG significantly affected PPG. Then we performed MLR twice on the relationship between PPG, and PYPG and RYPG at each level of competition. After checking the conditions for inference, we determined that for both levels, both PYPG and RYPG significantly affected PPG. Finally, we performed more MLR to determine if the relationships we observed at the different levels of competition were significant or not. We looked at the relationship between PPG and YPG and wanted to see if the relationship at the NFL level was different than the relationship at the collegiate level. After checking the conditions, we determined that the relationships were not significantly different. Finally, we performed two more MLRs. One examined the relationship between PPG and PYPG, and the other examined the relationship between PPG and RYPG. Both sought to see if the relationship at the NFL level was different than the relationship at the collegiate level. They both found that the relationships were indeed statistically significantly different. 
 
 \newpage
 
