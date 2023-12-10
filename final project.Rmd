@@ -18,11 +18,11 @@ groundhog.library(pkgs, '2023-11-29')
 
 # Introduction
 
-This project explores the relationships between Total Yards Per Game (YPG) and the Points Per Game (PPG) that a team scores in both the National Football League (NFL), as well as the Division 1 Football Bowl Subdivision (FBS) of College football. These results are then compared to answer the question of whether PPG and YPG have a differing relationship between the NFL and FBS. This project first examines the individual relationships between the NFL teams' YPG and their PPG, as well as examining how passing yards per game (PYPG) and rushing yards per game (RYPG) affect those results. This process is then repeated for the FBS, and then the resulting data is used to conclude how similar these relationships are in the FBS versus the more competitive NFL. This project heavily relies on simple linear regression (SLR), multiple linear regression (MLR), and analysis of covariance (ANCOVA) in order to display the differing trends between PPG and the YPG.
+This project explores the relationships between Total Yards Per Game (YPG) and the Points Per Game (PPG) that a team scores in both the National Football League (NFL), as well as the Division 1 Football Bowl Subdivision (FBS) of College football. These results are then compared to answer the question of whether PPG and YPG have a differing relationship between the NFL and FBS. This project first examines the individual relationships between the NFL teams' YPG and their PPG, as well as examining how passing yards per game (PYPG) and rushing yards per game (RYPG) affect those results. This process is then repeated for the FBS, and then the resulting data is used to conclude how similar these relationships are in the FBS versus the more competitive NFL. This project heavily relies on simple linear regression (SLR) and multiple linear regression (MLR) in order to display the differing trends between PPG and the YPG.
 
 # NFl Data
 
-First, we set off to explore the NFL data set that we scraped from pro-football-reference.com. This data set included a table with all 32 NFL teams, as well as statistics such as total yards, total passing yards, total rushing yards, etc. We then proceeded to tidy this table into one that only involved the Team, PPG, YPG, PYPG, and RYPG. Using this table we then created scatter plots for the three relationships: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Using these scatter plots we will analyze using SLR, MLR, and finally ANCOVA.
+First, we set off to explore the NFL data set that we scraped from pro-football-reference.com. This data set included a table with all 32 NFL teams, as well as statistics such as total yards, total passing yards, total rushing yards, etc. We then proceeded to tidy this table into one that only involved the Team, PPG, YPG, PYPG, and RYPG. Using this table we then created scatter plots for the three relationships: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Using these scatter plots we will analyze using SLR and MLR.
 
 ```{r create nfl dataframe}
 #create NFL table
@@ -200,9 +200,7 @@ All p-values are essentially zero. For the SLR, this means that we have proven t
 
 # College Data
 
-#First, we set off to explore the NFL data set that we scraped from pro-football-reference.com. This data set included a table with all 32 NFL teams, as well as statistics such as total yards, total passing yards, total rushing yards, etc. We then proceeded to tidy this table into one that only involved the Team, PPG, YPG, PYPG, and RYPG. Using this table we then created scatter plots for the three relationships: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Using these scatter plots we will analyze using SLR, MLR, and finally ANCOVA.
-
-Below we examine the College Football data set that we wrangled from sports-reference.com. Unlike the NFL data set, likely due to the large difference in number of teams, this data set had far less unnecessary statistics that had to be removed in order to create a tided table. The data was then examined for the same relationships as the NFL data set: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Further, we then created three more scatter plots and repeated the process of analyzing them using SLR, MLR, and ANCOVA.
+Below we examine the College Football data set that we wrangled from sports-reference.com. Unlike the NFL data set, likely due to the large difference in number of teams, this data set had far less unnecessary statistics that had to be removed in order to create a tided table. The data was then examined for the same relationships as the NFL data set: YPG v.s. PPG, PYPG v.s. PPG, and RYPG v.s. PPG. Further, we then created three more scatter plots and repeated the process of analyzing them using SLR, and MLR.
 
 ```{r create college dataframe}
 #scrape data from website
