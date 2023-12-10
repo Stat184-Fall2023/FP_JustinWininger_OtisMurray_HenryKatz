@@ -147,9 +147,9 @@ All three scatter plots show a positive, linear relationship. The first two, PPG
 
 ### Simple Linear Regression
 
-We decided to perform simple linear regression to see if PPG and YPG are related. In order to infer, some conditions must be met. The data must be linear, have equal variance, and must be normal. Below are two plots that asses whether or not the conditions are met.
+We decided to perform SLR to see if PPG and YPG are related. In order to infer, some conditions must be met. The data must be linear, have equal variance, and must be normal. Below are two plots that asses whether or not the conditions are met.
 
-```{r slr anaylsis}
+```{r nfl slr anaylsis}
 nflTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=nflOffense)
 
 mplot(nflTotalYardsSLRModel, which=1)
@@ -165,27 +165,27 @@ Because all the conditions for inference are met, we can now infer from the data
 
 ### Multiple Linear Regression
 
-We also decided to perform multiple linear regression to see how if PPG is related to PYPG and RYPG. The conditions for inference for multiple linear regression are the same as simple linear regression, with one additional condition. There must not be multicollinearity. Below are plots that asses the conditions for multiple linear regression.
+We also decided to perform MLR to see if PPG is related to PYPG and RYPG. The conditions for inference for MLR are the same as SLR, with one additional condition. There must not be multicollinearity. Below are plots that asses the conditions for MLR.
 
-```{r mlr analysis}
+```{r nfl mlr analysis}
 nflMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=nflOffense)
 
 mplot(nflMLRModel, which=1)
 mplot(nflMLRModel, which=2)
-gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=nflOffense)
-vif <- vif(nflMLRModel)
+gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=nflOffense, title='PYPG vs RYPG in the NFL')
+nflVif <- vif(nflMLRModel)
 
 nflMLRSummary<- summary(nflMLRModel)
 nflMLROutput <- nflMLRSummary[["coefficients"]]
 ```
 
-In multiple linear regression, the linearity condition is met if all predictors have a linear relationship. This linear relationship is seen in the second and third scatter plots from the visualization section. Those scatter plots prove that all predictors have a linear relationship, even if some are not that good. The linearity condition, therefore, is met. Unlike linearity, equal variance and normality are the same as before. The residual versus fitted plot shows a decent spread across the width, so the equal variance condition, therefore, is met. The Q-Q plot shows a weak linear relationship, but there still is one. We cannot say for sure if normality is met, but we will still proceed with caution as if it is met. Multicollinearity occurs if two independent variables have a high correlation. The two independent variables are the two explanatory variables, PYPG and RYPG. The third plot, a scatter plot that shows the relationship between PYPG and RYPG, should be a good indicator of if multicollinearity is present or not. If this scatter plot showed a strong relationship, it would be evidence that multicollinearity is present. It does not, however. Additionally, variance inflation factor (VIF) is a direct measure of multicollinearity. Generally, a value of five or above means multicollinearity is present. The VIF value for both predictors is $1.421673$, so the multicollinearity condition, therefore, is met.
+In MLR, the linearity condition is met if all predictors have a linear relationship. This linear relationship is seen in the second and third scatter plots from the visualization section. Those scatter plots prove that all predictors have a linear relationship, even if some are not that good. The linearity condition, therefore, is met. Unlike linearity, equal variance and normality are the same as before. The residual versus fitted plot shows a decent spread across the width, so the equal variance condition, therefore, is met. The Q-Q plot shows a weak linear relationship, but there still is one. We cannot say for sure if normality is met, but we will still proceed with caution as if it is met. Multicollinearity occurs if two independent variables have a high correlation. The two independent variables are the two explanatory variables, PYPG and RYPG. The third plot, a scatter plot that shows the relationship between PYPG and RYPG, should be a good indicator of if multicollinearity is present or not. If this scatter plot showed a strong relationship, it would be evidence that multicollinearity is present. It does not, however. Additionally, variance inflation factor (VIF) is a direct measure of multicollinearity. Generally, a value of five or above means multicollinearity is present. The VIF value for both predictors is $1.421673$, so multicollinearity is not present and the multicollinearity condition, therefore, is met.
 
-All conditions for inference are met. The multiple linear regression model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $9.814515$ which corresponds to a p-value of $1.007533 × 10^{-10}$. For RYPG, the test statistic is $7.282251$ which corresponds to a p-value of $5.086612 × 10^{-8}$.
+All conditions for inference are met. The MLR model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $9.814515$ which corresponds to a p-value of $1.007533 × 10^{-10}$. For RYPG, the test statistic is $7.282251$ which corresponds to a p-value of $5.086612 × 10^{-8}$.
 
 ### Regression Conclusion
 
-All p-values are essentially zero. For the simple linear regression, this means that we have proven that PPG and YPG have a linear relationship. As YPG increases, so does PPG. For the multiple linear regression,this means that we can conclude that both predictors are statistically significant. Both RPYG and PYPG, therefore, significantly affect PPG.
+All p-values are essentially zero. For the SLR, this means that we have proven that PPG and YPG have a linear relationship. As YPG increases, so does PPG. For the MLR, this means that we can conclude that both predictors are statistically significant. Both RPYG and PYPG, therefore, significantly affect PPG.
 
 # College Data
 
@@ -255,7 +255,9 @@ collegeRanks14%>%
   )
 ```
 
-This table is the exact same as the NFL table in how it is formatted. It shows the top 14 teams' ranks in PPG in descending order.
+This table is the exact same as the NFL table in how it is formatted. It shows the top 14 teams' ranks in PPG (out of 131) in ascending order. It also shows the team's rank in YPG. While this table is not quite as perfect as the NFL table, it is still pretty good. The top ranked team in PPG was also the top ranked team in YPG. Additionally, all of the top 14 teams in PPG are in the top 29 in YPG. 29 divided by 131 is roughly 22%, so there appears to be a relationship between PPG and YPG in college as well as the NFL. However, we will conduct further analysis to determine if there truly is a relationship.
+
+Delving deeper into our analysis, below are three scatter plots. They are the same plots in the same order as before, just with data from college teams as opposed to NFL teams. The first shows the relationship between PPG and YPG. The second shows the relationship between PPG and PYPG. The third shows the relationship between PPG and RYPG.
 
 ```{r college scatterplots}
 gf_point(`Points Per Game`~`Yards Per Game`, 
@@ -277,20 +279,61 @@ gf_point(`Points Per Game`~`Rushing Yards Per Game`,
   gf_lm()
 ```
 
-```{r college analysis}
+Like before, all three plots show a positive linear relationship. All three appear to show a much stronger relationship than their NFL counterparts. But, like the NFL plots, PPG vs RYPG shows a much weaker relationship than the other two. Even though it is weaker, it is certainly not weak. The relationship between PPG and RYPG is relatively strong. 
+
+## College Analysis
+
+### Simple Linear Regression
+
+We wanted to perform SLR to see if PPG and YPG are related. Like before, the conditions for inference must be met. Below are two plots that attempt to assess these conditions.
+
+```{r college slr analysis}
 collegeTotalYardsSLRModel <- lm(`Points Per Game`~`Yards Per Game`, data=collegeOffense)
-collegeMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=collegeOffense)
 
 mplot(collegeTotalYardsSLRModel, which=1)
 mplot(collegeTotalYardsSLRModel, which=2)
-summary(collegeTotalYardsSLRModel)
+
+collegeTotalYardsSLRSummary <- summary(collegeTotalYardsSLRModel)
+collegeTotalYardsSLROutput <- collegeTotalYardsSLRSummary[["coefficients"]]
+```
+
+The conditions for inference, linearity, equal variance, and normality are the same for all instances of SLR. The data are linear because the scatterplot of PPG vs YPG shows a strong and obvious linear relationship. The linearity condition, therefore, is met. The residuals versus fitted plot shows a nice even spread. The equal variance condition, therefore, is met. Finally, the Q-Q plot shows a strong linear relationship, so the normality condition, therefore, is met.
+
+All conditions for inference are met. This model has a test statistic of $27.409820$ which corresponds to a p-value of $1.213549 × 10^{-55}$.
+
+### Multiple Linear Regression
+
+Like the NFL analysis, we have also decided to perform MLR to see if PPG is related to PYPG and RYPG. The conditions that must be met are linearity, equal variance, normality, and multicollinearity. Below are plots that assess whether or not those conditions are met.
+
+```{r college mlr analysis}
+collegeMLRModel <- lm(`Points Per Game`~`Passing Yards Per Game`+`Rushing Yards Per Game`, data=collegeOffense)
 
 mplot(collegeMLRModel, which=1)
 mplot(collegeMLRModel, which=2)
-summary(collegeMLRModel)
+gf_point(`Passing Yards Per Game`~`Rushing Yards Per Game`, data=collegeOffense, title='PYPG vs RYPG in College')
+collegeVif <- vif(collegeMLRModel)
+
+collegeMLRSummary<- summary(collegeMLRModel)
+collegeMLROutput <- collegeMLRSummary[["coefficients"]]
 ```
 
-```{r comparative visualizations}
+The linearity condition is met because, as seen in the second and third scatterplot, all predictors have a relatively strong linear relationship. The residuals versus fitted plot shows a nice spread, so the equal variance condition is met. The Q-Q plot shows a very strong linear relationship, so the normality condition is met. Finally, because the scatterplot of PYPG vs RYPG does how show a relationship, and the individual VIF values are only 1.057908, multicollinearity is not present, so the multicollinearity condition, therefore, is met.
+
+All conditions for inference are met. The MLR model has two predictors, and will therefore have two test statistics and p-values. For PYPG, the test statistic is $22.620628$ which corresponds to a p-value of $1.494167 × 10^{-46}$. For RYPG, the test statistic is $20.271545$ which corresponds to a p-value of $8.880033 × 10^{-42}$.
+
+### Regression Conclusion
+
+We reach the same conclusion as the NFL data. All p-values are essentially zero. For the SLR, this means that we have proven that PPG and YPG have a linear relationship. As YPG increases, so does PPG. For the MLR, this means that we can conclude that both predictors are statistically significant. Both RPYG and PYPG, therefore, significantly affect PPG.
+
+# Comparison
+
+narrative text here
+
+## Comparative Visualizations
+
+To see how the relationship between PPG and YPG, PYPG, and RYPG is different for the NFL versus College, scatterplots with the two on the same axis separated by level of competition would be helpful. Below are three scatterplots, each containing points from both levels of competition. These plots do contain the least-squares regression line for each level. This was done to make it easier to see how the relationships differ at each level. The first plot shows the relationship between PPG and YPG by level of competition. The second shows the relationship between YPG and PYPG by level of competition. The third shows the relationship between YPG and RYPG by level of competition.
+
+```{r comparative visualizaions}
 collegeOffense <- collegeOffense%>%
   mutate(`Level`= "College")
 nflOffense <- nflOffense%>%
@@ -298,52 +341,15 @@ nflOffense <- nflOffense%>%
 offense <- rbind(nflOffense,collegeOffense)
 offense$IndLevel <- as.numeric(offense$Level=="NFL")
 
-ggplot(offense) +
-  aes(
-    x = `Yards Per Game`,
-    y = `Points Per Game`,
-    color = Level
-  ) +
-  labs(
-     title= "Points Per Game versus Yards Per Game by Level of Competition"
-  )+
-  geom_point(shape = "circle", size = 1.5) +
-  scale_color_hue(direction = 1) +
-  theme_minimal()
-
-ggplot(offense) +
-  aes(
-    x = `Passing Yards Per Game`,
-    y = `Points Per Game`,
-    color = Level
-  ) +
-  labs(
-     title= "Points Per Game versus Passing Yards Per Game by Level of Competition"
-  )+
-  geom_point(shape = "circle", size = 1.5) +
-  scale_color_hue(direction = 1) +
-  theme_minimal()
-
-ggplot(offense) +
-  aes(
-    x = `Rushing Yards Per Game`,
-    y = `Points Per Game`,
-    color = Level
-  ) +
-  labs(
-     title= "Points Per Game versus Rushing Yards Per Game by Level of Competition"
-  )+
-  geom_point(shape = "circle", size = 1.5) +
-  scale_color_hue(direction = 1) +
-  theme_minimal()
-
-
 offenseModel <- lm(`Points Per Game` ~ `Yards Per Game`+IndLevel+`Yards Per Game`*IndLevel, data = offense)
 b0 <- summary(offenseModel)$coeff[1,1]
 b1 <- summary(offenseModel)$coeff[2,1]
 b2 <- summary(offenseModel)$coeff[3,1]
 b3 <- summary(offenseModel)$coeff[4,1]
-gf_point(`Points Per Game` ~ `Yards Per Game`, color=~Level, data = offense) %>%
+gf_point(`Points Per Game` ~ `Yards Per Game`, 
+         color=~Level, 
+         data = offense,
+         title= "Points Per Game versus Yards Per Game by Level of Competition") %>%
 gf_abline(intercept = b0, slope = b1, color = "red") %>%
 gf_abline(intercept = b0+b2, slope = b1+b3, color = "blue")
 
@@ -352,7 +358,10 @@ pb0 <- summary(passingOffenseModel)$coeff[1,1]
 pb1 <- summary(passingOffenseModel)$coeff[2,1]
 pb2 <- summary(passingOffenseModel)$coeff[3,1]
 pb3 <- summary(passingOffenseModel)$coeff[4,1]
-gf_point(`Points Per Game` ~ `Passing Yards Per Game`, color=~Level, data = offense) %>%
+gf_point(`Points Per Game` ~ `Passing Yards Per Game`, 
+         color=~Level,
+         data = offense,
+         title= "Points Per Game versus Passing Yards Per Game by Level of Competition") %>%
 gf_abline(intercept = pb0, slope = pb1, color = "red") %>%
 gf_abline(intercept = pb0+pb2, slope = pb1+pb3, color = "blue")
 
@@ -361,18 +370,36 @@ rb0 <- summary(rushingOffenseModel)$coeff[1,1]
 rb1 <- summary(rushingOffenseModel)$coeff[2,1]
 rb2 <- summary(rushingOffenseModel)$coeff[3,1]
 rb3 <- summary(rushingOffenseModel)$coeff[4,1]
-gf_point(`Points Per Game` ~ `Rushing Yards Per Game`, color=~Level, data = offense) %>%
+gf_point(`Points Per Game` ~ `Rushing Yards Per Game`, 
+         color=~Level, 
+         data = offense,
+         title= "Points Per Game versus Rushing Yards Per Game by Level of Competition") %>%
 gf_abline(intercept = rb0, slope = rb1, color = "red") %>%
 gf_abline(intercept = rb0+rb2, slope = rb1+rb3, color = "blue")
 ```
 
-```{r comparitave anaylsys}
-totalYardsANCOVAModel <- lm(`Points Per Game` ~ `Yards Per Game` + Level, data=offense)
-anova(totalYardsANCOVAModel)
+These three plots are very intriguing. The first plot shows that the relationship between PPG and YPG is very similar in both the NFL and College. Because the slopes of the lines of best fit are almost identical, the relationships are also almost identical. The other two plots show that the relationships between PPG and PYPG and PPG and RYPG differ for the two levels of competition. Whether these differences are statistically significant will be further explored. 
 
+## Comparative Analysis
+
+To analyze whether the level of competition affects any of the three relationships we've been observing so far, we will perform more MLR.
+
+### Points per Game versus Yards per Game 
+
+
+
+```{r ppg vs ypg MLR}
+totalYardsMLRModel <- lm(`Points Per Game` ~ `Yards Per Game` + Level, data=offense)
+mplot(collegeMLRModel, which=1)
+mplot(collegeMLRModel, which=2)
+```
+
+```{r ppg vs pypg ancova}
 passingYardsANCOVAModel <- lm(`Points Per Game` ~ `Passing Yards Per Game` + Level, data=offense)
 anova(passingYardsANCOVAModel)
+```
 
+```{r ppg vs rypg ancova}
 rushingYardsANCOVAModel <- lm(`Points Per Game` ~ `Rushing Yards Per Game` + Level, data=offense)
 anova(rushingYardsANCOVAModel)
 ```
