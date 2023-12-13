@@ -21,7 +21,7 @@ Use the following checklist to ensure that you have completed all of the tasks.
   - [X] Supplementary data sources may come from anywhere.
 - [X] Read in your data and perform any necessary data wrangling and cleaning.
 - [X] Conduct Exploratory Data Analysis.
-- [ ] Prepare a reproducible report
+- [X] Prepare a reproducible report
   - [X] Use a RMD file; output type is your choice.
   - [X] The report should be well organized with section headings
   - [ ] Code should be collapsed/hidden for HTML, and R Notebooks or in a Code Appendix at the end for a PDF.
