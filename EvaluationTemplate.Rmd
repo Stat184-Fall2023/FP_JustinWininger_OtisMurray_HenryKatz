@@ -1,7 +1,7 @@
 ---
 title: "Final Course Project Group Evaluations"
-author: "YOUR NAME"
-date: ""
+author: "Otis Murray"
+date: "2023-12-13"
 output: pdf_document
 ---
 <!--Directions
@@ -13,7 +13,7 @@ Use this RMD template to complete peer and self evaluations for your final proje
 
 ## Who are you evaluating?
 
-*Full name of team member you are evaluating, or say "self-evaluation"*
+*Henry Katz*
 
 
 ## Evaluation Areas
@@ -22,20 +22,20 @@ Use this RMD template to complete peer and self evaluations for your final proje
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): 5
 
-Justification/Examples:
+Justification/Examples: I decided to give Henry a grade of 5/10 because while he understood the goals of the project and was able to provide some leadership during the presentation of our project, he didn't participate enough in the research, nor was he able to interpret the data that Justin and I had found. He also didn't provide any creative efforts towards bettering the project. 
 
 
 
 
 #### 2. Team Support.
 
-*Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
+*Enthusiasm, commitment to the project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, and receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): 6
 
-Justification/Examples:
+Justification/Examples: Henry was enthusiastic about the project and was able to respect our ideas. He was also receptive to constructive feedback. However, Henry's commitment to doing the actual work on the project was very minimal. Leaving the majority up to Justin and me.
 
 
 
@@ -44,9 +44,9 @@ Justification/Examples:
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): 4
 
-Justification/Examples:
+Justification/Examples: I gave him a 4 because while Henry was able to communicate through messages as we had made a group chat, however, when it comes to his actual contributions he didn't really provide any help with the creation of the presentation, nor did he write any narrative text for the project itself.
 
 
 
@@ -55,9 +55,9 @@ Justification/Examples:
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): 1
 
-Justification/Examples:
+Justification/Examples: I decided to give Henry only a 1/10 for his time contribution simply because he didn't spend any time outside of class working on the project, nor did he do his equal share of work. Henry was also unable to try to keep his team on task because he sort of left himself out of the loop.
 
 
 
@@ -68,15 +68,15 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): 4
 
-Justification/Examples:
-
-
+Justification/Examples: I decided to give Henry only a 4/10 because while he was nice and open to talking about the project in class when it came to actually doing the work outside of class he seemed to not care. The work was left to Justin and me and I felt that it wasn't fair.
 
 
 
-### Total Score (out of 50): 
+
+
+### Total Score (out of 50): 20
 
 
 # Team Member 2
