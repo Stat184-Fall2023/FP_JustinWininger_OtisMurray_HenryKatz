@@ -83,7 +83,7 @@ Justification/Examples: I decided to give Henry only a 4/10 because while he was
 
 ## Who are you evaluating?
 
-*Full name of team member you are evaluating, or say "self-evaluation"*
+*Justin Wininger*
 
 
 ## Evaluation Areas
@@ -92,9 +92,9 @@ Justification/Examples: I decided to give Henry only a 4/10 because while he was
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: Justin efforts were very significant when it came to understanding the goals of the project as well as actually performing the research to complete the project. He was able to provide his creative efforts in order to solve many problems as we as providing leadership when it came to making sure everyone was on the same page.
 
 
 
@@ -103,9 +103,9 @@ Justification/Examples:
 
 *Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: I decided to give Justin a 10 for team support because his overall attitude and commitment to the project was unmatched. He cooperate with both me and Henry and even when Henry decided to not involve himself in the actual work Justin stepped up and was willing to compromise his time in order to make sure the project was finished. He was also very receptive to any constructive feedback I gave him and he would always provide solutions to any problems that arose.
 
 
 
@@ -114,9 +114,9 @@ Justification/Examples:
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: I would give Justin another 10/10 for communication contributions because he did a lot of work on the presentation as well as providing a lot of narrative test for our RMD file. His communication within the team was also commendable as he would regularly make himself available for us to meet and do more work on the project.
 
 
 
@@ -125,9 +125,9 @@ Justification/Examples:
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: I would give Justin yet another 10/10 for his time contributions because originally when we started the project we assumed it would be split evenly between me, Justin and Henry. However, once we realized that Justin and I would have to do the bulk of the work he was very optimistic about it, even though it meant devoting more of his time. Justin attended all team meetings and followed through on all deadlines we had set for the group. In most cases, he actually was able to complete things far in advance of the deadlines.
 
 
 
@@ -138,22 +138,22 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
-
-
+Justification/Examples: Overall I would give just a 10/10 for his contributions to the group because despite having to face adversity he was able to remain calm and dedicated to the project. He didn't let anything prevent him from displaying his best work in both R, as well as outside of coding. He was very kind throughout the entirety of the project, and I think he perfectly exemplifies how a good team member should act.
 
 
 
-### Total Score (out of 50): 
+
+
+### Total Score (out of 50): 50
 
 
 # Team Member 3
 
 ## Who are you evaluating?
 
-*Full name of team member you are evaluating, or say "self-evaluation"*
+*self-evaluation*
 
 
 ## Evaluation Areas
@@ -162,9 +162,9 @@ Justification/Examples:
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: Throughout this project I was able to fully understand everything that was going on as well as provide my creativity in order to solve multiple problems we encountered. I also devoted a lot of my time towards doing the research and evaluating the data we wrangled through both code and narrative text. I provided intellectual leadership for the group by recommending new ways in which we could look at the data to make sure our analysis covered more than just the intial goal of points per game versus yards per game in football.
 
 
 
@@ -173,10 +173,9 @@ Justification/Examples:
 
 *Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
-
+Justification/Examples: I would also give myself a 10 for the category of team support because I did multiple things to ensure that everyone in the group felt welcome and excited to work on this project. One of the things I did was get both Henry's and Justin's phone numbers so I could create a group chat for us to make communication more efficient. I was cooperative and receptive to constructive feedback, as every time it was provided, I would make sure I took a step back and looked at the issue from their perspective. I, too, was very willing to compromise my time when Justin and I realized that we would have to do more work on the project than we had anticipated.
 
 
 
@@ -184,9 +183,9 @@ Justification/Examples:
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): 8
 
-Justification/Examples:
+Justification/Examples: I think my communication contribution would be an 8/10 because although I made a group chat to improve our communication, I could've tried to push Henry more into becoming more involved with the project rather than letting him just rely on Justin and I to do the majority for him. With my contributions to the written work and the presentation I would say that they were good as I put my best efforts into making sure all narrative text I provided was error free, as well as making sure my part in the presentation went smooth.
 
 
 
@@ -195,9 +194,9 @@ Justification/Examples:
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): 10
 
-Justification/Examples:
+Justification/Examples: I would give myself a 10/10 for time contributions because I devoted a large amount of time ensuring that the project went smoothly and that we were able to meet both group deadlines as well as class deadlines. I attended all team meetings and organized many of them myself. I also did more than my equal share of work as I had to pick up some of the parts that we originally planned for Henry to do. Over the course of the project I was able to keep the team on task, making sure that, at least during class, no one got distracted and started working on something other than the project. Lastly, I followed through on all the team plans and was never late to a team meeting or group deadline.
 
 
 
@@ -208,13 +207,13 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): 9
 
-Justification/Examples:
-
-
+Justification/Examples: I would give myself a 9/10 for overall contribution because while I think I put my best foot forward and tried very hard, I would say, as with anything, I could have done better. In that sense I think a 10/10 in this category is unachieveable for me because I think of it like "you always could've wrote that extra sentence," or "studied the data from a different perspective." I think I left a good impression on the group as I was a very involved team member, willing to commit as much time as necessary in order to ensure the project turned out good.
 
 
 
-### Total Score (out of 50): 
+
+
+### Total Score (out of 50): 47
 
