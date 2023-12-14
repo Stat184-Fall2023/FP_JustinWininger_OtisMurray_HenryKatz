@@ -14,7 +14,7 @@ Use this RMD template to complete peer and self evaluations for your final proje
 ## Who are you evaluating?
 
 *Full name of team member you are evaluating, or say "self-evaluation"*
-
+self-evaluation
 
 ## Evaluation Areas
 
@@ -22,21 +22,21 @@ Use this RMD template to complete peer and self evaluations for your final proje
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): 9___
 
 Justification/Examples:
 
-
+I helped as much as I could intelectually with the project as I helped brainstorm the idea and felt we all contributed equally to the thought process of our project and how we interpreted our data.
 
 
 #### 2. Team Support.
 
 *Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
-
+I felt the others kinds took control with their ideas for the project, which I was fine with. I thought I was cooperative and open to their ideas but also provided some feedback to make some adjustments.
 
 
 
@@ -44,22 +44,22 @@ Justification/Examples:
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): 10___
 
 Justification/Examples:
 
-
+I was consistently texting asking if we could meet up, as well as if there was anything else I could do in order to help the team and the project.
 
 
 #### 4. Time Contributions.
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): 8___
 
 Justification/Examples:
 
-
+I think I could have spent a little more time outside of class working on the project, but I was actively seeing if there was anything I needed to do for the project, but I felt the others in my group took control and I felt it was a little hard for me to find a ton of ways to contribute.
 
 
 
@@ -68,15 +68,15 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
 
+I felt I was overall helpful and a good group member throughout this project.
 
 
 
-
-### Total Score (out of 50): 
+### Total Score (out of 50): 45
 
 
 # Team Member 2
@@ -84,7 +84,7 @@ Justification/Examples:
 ## Who are you evaluating?
 
 *Full name of team member you are evaluating, or say "self-evaluation"*
-
+Justin Wininger
 
 ## Evaluation Areas
 
@@ -92,32 +92,32 @@ Justification/Examples:
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): 10___
 
 Justification/Examples:
 
-
+Justin spent a lot of time gathering the data and made good effots to interpet the meaning of it in different ways.1
 
 
 #### 2. Team Support.
 
 *Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): 10___
 
 Justification/Examples:
 
-
+Justing felt very commited to the project and was always looking to generate ideas.
 
 
 #### 3. Communication Contributions. 
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): _10__
 
 Justification/Examples:
-
+Justin helped a ton with the creation of the presentation and was always producing quality with his written work.
 
 
 
@@ -125,10 +125,10 @@ Justification/Examples:
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
-
+Justin was always on top of deadlines, but sometimes I would ask for meeting times and they would not tell me, so I felt kind of excluded.
 
 
 
@@ -138,15 +138,15 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
+Justin was overall a great group member, but I felt could have been a tad more inclusive.
 
 
 
 
-
-### Total Score (out of 50): 
+### Total Score (out of 50): 48
 
 
 # Team Member 3
@@ -154,7 +154,7 @@ Justification/Examples:
 ## Who are you evaluating?
 
 *Full name of team member you are evaluating, or say "self-evaluation"*
-
+Otis Murray
 
 ## Evaluation Areas
 
@@ -162,10 +162,10 @@ Justification/Examples:
 
 *Understanding the project, doing the research, evaluating and interpreting data, creative efforts and problem solving insight, providing intellectual leadership for group.* 
 
-Score (out of 10): ___
+Score (out of 10): _10__
 
 Justification/Examples:
-
+Otis was very helpful with gathering the data, as well as providing some leadership within the group.
 
 
 
@@ -173,10 +173,10 @@ Justification/Examples:
 
 *Enthusiasm, commitment to project, cooperation, respect for other persons’ ideas, willingness to compromise as appropriate, receptiveness to constructive feedback.* 
 
-Score (out of 10): ___
+Score (out of 10): 10___
 
 Justification/Examples:
-
+Otis was very committed to the project which made it easy to get work done and meet deadlines.
 
 
 
@@ -184,10 +184,10 @@ Justification/Examples:
 
 *Effectiveness of communication within team, quality of written work, contributions toward creation of presentation and other written work.* 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
-
+Otis communicated well, but sometimes meeting were not communicated, which led to me being excluded and finding it somewhat hard to contirbute.
 
 
 
@@ -195,11 +195,11 @@ Justification/Examples:
 
 *Keeping team on task, meeting deadlines, following through on plans, attendance at team meetings, does equal share of work.* 
 
-Score (out of 10): ___
+Score (out of 10): 10___
 
 Justification/Examples:
 
-
+Otis always was on task and got his work done.
 
 
 
@@ -208,13 +208,13 @@ Justification/Examples:
 *Score any additional contributions, general remarks, or overall impression of this person as a member of the group.*
 
 
-Score (out of 10): ___
+Score (out of 10): _9__
 
 Justification/Examples:
 
+Otis was a great, diligent groupmate. My only thing he could have done to be a better groupmate was be more inclusive on spreading the workload.
 
 
 
-
-### Total Score (out of 50): 
+### Total Score (out of 50): 48
 
